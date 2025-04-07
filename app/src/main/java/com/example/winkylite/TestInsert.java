@@ -1,28 +1,17 @@
 package com.example.winkylite;
 
-import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.IOException;
-
 public class TestInsert extends AppCompatActivity {
-    protected static DatabaseHelper dbHelper;
+    private DatabaseHelper dbHelper;
 
-    public static void main(String[] args){
-        dbHelper.openDatabase();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        dbHelper = new DatabaseHelper(this);
 
-        String testUsername = "INSERT INTO Users (wUsername) VALUES ('testUser')";
-        dbHelper.getWritableDatabase().execSQL(testUsername);
-
-        String testPassword = "INSERT INTO Users (wPassword) VALUES ('testPW')";
-        dbHelper.getWritableDatabase().execSQL(testPassword);
-
-        String testTheme = "INSERT INTO Users (wTheme) VALUES ('1')";
-        dbHelper.getWritableDatabase().execSQL(testTheme);
+        String testQuery = "INSERT INTO Users (wUsername, wPassword, wTheme) VALUES ('testUser', 'testPW', '1')";
+        dbHelper.getWritableDatabase().execSQL(testQuery);
     }
-
 }
