@@ -88,12 +88,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Handle upgrades if needed
     }
 
-    // Add your custom database access methods here
-    public Cursor queryData(String query){
-        return myDataBase.rawQuery(query,null);
+    public Cursor queryData(String query) {
+        return myDataBase.rawQuery(query, null);
     }
 }
