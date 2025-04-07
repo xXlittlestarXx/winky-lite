@@ -1,3 +1,5 @@
+package com.example.winkylite;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;

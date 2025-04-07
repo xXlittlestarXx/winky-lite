@@ -1,3 +1,5 @@
+package com.example.winkylite;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.database.Cursor;
 import android.os.Bundle;
