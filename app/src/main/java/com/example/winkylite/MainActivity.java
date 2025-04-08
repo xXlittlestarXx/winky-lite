@@ -9,14 +9,14 @@ import android.widget.Toast;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
-    private DatabaseHelper dbHelper;
+    private DBHandler dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        dbHelper = new DatabaseHelper(this);
+        dbHelper = new DBHandler(this);
 
         try {
             dbHelper.createDatabase();
