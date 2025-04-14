@@ -19,24 +19,25 @@ public class MainActivity extends AppCompatActivity {
         dbHelper = new DBHandler(this);
 
         try {
-            dbHelper.createDatabase();
-            dbHelper.openDatabase();
+            new Thread(() -> {
+                try {
+                    dbHelper.createDatabase();
+                    dbHelper.openDatabase();
 
-            // Example query
-            Cursor cursor = dbHelper.queryData("SELECT * FROM my_table");
+                    Cursor cursor = dbHelper.queryData("SELECT * FROM wUsers");
 
-            if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    String data = cursor.getString(cursor.getColumnIndexOrThrow("column_name"));
+                } catch (IOException e) {
+                    runOnUiThread(() -> {
+                            Toast.makeText(this, "Database Error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG).show();
+                    });
 
-                    Log.d("Database", "Data: " + data);
+                    Log e ("Database", "Initilization error", e);
                 }
-                cursor.close();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Error initializing database", Toast.LENGTH_SHORT).show();
+            }).start();
+        } catch (Exception e) {
+            Toast.makeText(this, "Thread Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 
