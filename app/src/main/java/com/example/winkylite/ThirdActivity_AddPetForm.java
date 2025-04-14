@@ -1,4 +1,10 @@
 package com.example.winkylite;
 
-public class ThirdActivity_AddPetForm {
+import android.os.Bundle;
+import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class ThirdActivity_AddPetForm extends AppCompatActivity {
+
 }
