@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
                     dbHelper.createDatabase();
                     dbHelper.openDatabase();
 
-                    Cursor cursor = dbHelper.queryData("SELECT * FROM wUsers");
+                    //Cursor cursor = dbHelper.queryData("SELECT * FROM wUsers");
 
                 } catch (IOException e) {
                     runOnUiThread(() ->
