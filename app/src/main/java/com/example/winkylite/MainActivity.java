@@ -1,6 +1,8 @@
 package com.example.winkylite;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +21,11 @@ public class MainActivity extends AppCompatActivity {
 
         continueButton = findViewById(R.id.button);
         continueButton.setOnClickListener(v-> {
+            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
 
+            startActivity(intent);
+
+            //overridePendingTransition(R.a);
                 });
 
         dbHelper = new DBHandler(this);
