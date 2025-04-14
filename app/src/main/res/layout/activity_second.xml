@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="#FCE9D8"
-    tools:context=".SecondActivity">
+    tools:context=".SecondActivity_HomePage">
 
     <Button
         android:id="@+id/AddPetButton"
@@ -20,14 +20,14 @@
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.438"
-        tools:background="#1A36B4" />
+        app:layout_constraintVertical_bias="0.407"
+        tools:backgroundTint="#1A36B4" />
 
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="164dp"
+        android:layout_marginTop="148dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

@@ -2,16 +2,12 @@ package com.example.winkylite;
 
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.database.Cursor;
+
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
-import android.widget.Toast;
-
-import java.io.IOException;
 
 
-public class SecondActivity extends AppCompatActivity {
+public class SecondActivity_HomePage extends AppCompatActivity {
 
     private Button addPetButton;
     private DBHandler dbHelper;

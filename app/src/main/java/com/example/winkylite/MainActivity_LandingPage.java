@@ -3,7 +3,6 @@ package com.example.winkylite;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -11,7 +10,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity_LandingPage extends AppCompatActivity {
     private DBHandler dbHelper;
     private Button continueButton;
     @Override
@@ -21,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
         continueButton = findViewById(R.id.button);
         continueButton.setOnClickListener(v-> {
-            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+            Intent intent = new Intent(MainActivity_LandingPage.this, SecondActivity_HomePage.class);
 
             startActivity(intent);
 
