@@ -28,12 +28,16 @@
         <activity
             android:name=".SecondActivity_HomePage"
             android:exported="false"/>
+        <activity
+            android:name=".ThirdActivity_AddPetForm"
+            android:exported="false"/>
 
         <activity
             android:name=".TestInsert"
             android:exported = "false" >
 
         </activity>
+
     </application>
 
 </manifest>

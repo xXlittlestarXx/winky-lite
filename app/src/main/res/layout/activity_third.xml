@@ -1,33 +1,230 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FCE9D8"
-    android:backgroundTint="#FCE9D8">
+    android:background="#FCE9D8">
 
-    <Button
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.105"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.035" />
+        android:padding="16dp">
 
-    <Button
-        android:id="@+id/submitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.956" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add New Pet"
+            android:textSize="24sp"
+            android:textColor="#1a36b4"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/backButton"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/petNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pet Name:"
+            android:textSize="18sp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/petName"
+            android:layout_width="200dp"
+            android:layout_height="48dp"
+            android:hint="Name"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/petNameLabel"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/ageLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Age:"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@+id/petName"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/ageInput"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:hint="Age"
+            android:inputType="number"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/ageLabel"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <RadioGroup
+            android:id="@+id/ageUnitGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/ageInput"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <RadioButton
+                android:id="@+id/months"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="Months" />
+
+            <RadioButton
+                android:id="@+id/years"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="Years" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/typeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Type:"
+            android:textSize="18sp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/ageUnitGroup"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <RadioGroup
+            android:id="@+id/typeButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/typeLabel"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <RadioButton
+                android:id="@+id/cat"
+                android:layout_width="120dp"
+                android:layout_height="48dp"
+                android:text="Cat" />
+
+            <RadioButton
+                android:id="@+id/dog"
+                android:layout_width="120dp"
+                android:layout_height="48dp"
+                android:text="Dog" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/genderLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gender:"
+            android:textSize="18sp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/typeButtons"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <RadioGroup
+            android:id="@+id/genderButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/genderLabel"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <RadioButton
+                android:id="@+id/male"
+                android:layout_width="120dp"
+                android:layout_height="48dp"
+                android:text="Male" />
+
+            <RadioButton
+                android:id="@+id/female"
+                android:layout_width="120dp"
+                android:layout_height="48dp"
+                android:text="Female" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/activityLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Activity Level:"
+            android:textSize="18sp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/genderButtons"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <SeekBar
+            android:id="@+id/activitySlider"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:max="2"
+            android:progress="1"
+            android:progressTint="#000000"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/activityLabel" />
+
+        <TextView
+            android:id="@+id/weightLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current Weight (kg):"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@+id/activitySlider"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/currentWeight"
+            android:layout_width="150dp"
+            android:layout_height="48dp"
+            android:hint="4.2"
+            android:inputType="numberDecimal"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/weightLabel"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <CheckBox
+            android:id="@+id/goalWeightCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="Set Goal Weight"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/currentWeight"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/goalWeight"
+            android:layout_width="150dp"
+            android:layout_height="48dp"
+            android:hint="Goal Weight"
+            android:inputType="numberDecimal"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/goalWeightCheckbox"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:text="Submit"
+            android:textSize="18sp"
+            android:backgroundTint="#1a36b4"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="30dp"
+            app:layout_constraintTop_toBottomOf="@+id/goalWeight"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class DBHandler extends SQLiteOpenHelper {
-    private static final String DB_NAME = "myDB.db";
+    private static final String DB_NAME = "myDBupdated.db";
     private static final int DB_VERSION = 1;
     private final Context context;
     private String DB_PATH;
