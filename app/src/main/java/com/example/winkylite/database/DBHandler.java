@@ -107,7 +107,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
 
-        values.put("wUserID", 1);
+        values.put("userID", 1);
         values.put("wPetName", Pets.getPetName());
         values.put("wPetType", Pets.getPetType());
         values.put("wPetAge", Pets.getPetAge());
@@ -115,13 +115,13 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put("wPetGender", Pets.getPetGender());
         values.put("wPetFixed", Pets.getIsFixed() ? "Yes" : "No");
         values.put("wPetActivityLvl", Pets.getPetActivity());
+        values.put("wPetActivity", (double) Pets.getPetActivityLevel());
         values.put("wPetCurrentWeight", Pets.getPetCurrentWeight());
         values.put("wPetGoalWeight", Pets.getHasGoalWeight() ? Pets.getPetGoalWeight() : null);
         values.put("wPetKcalGoal", Pets.getRecKcal());
-        values.put("wPetProteinGoal",Pets.getRecProtein());
+        values.put("wPetProteinGoal", Pets.getRecProtein());
         values.put("wPetFatsGoal", Pets.getRecFats());
         values.put("wPetMoistureGoal", 75);
-        values.put("wPetActivityLvl", Pets.getPetActivityLevel());
 
         db.insert("Pets", null, values);
 
