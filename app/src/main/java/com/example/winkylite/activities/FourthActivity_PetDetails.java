@@ -40,6 +40,7 @@ public class FourthActivity_PetDetails extends AppCompatActivity {
         Button addMealButton = findViewById(R.id.addMealButton);
         Button viewMealsButton = findViewById(R.id.viewMealsButton);
         Button viewChartsButton = findViewById(R.id.viewChartsButton);
+        Button backButton = findViewById(R.id.backButton);
 
         profileButton.setOnClickListener(v->{
 
@@ -55,6 +56,12 @@ public class FourthActivity_PetDetails extends AppCompatActivity {
 
         viewChartsButton.setOnClickListener(v->{
 
+        });
+
+        backButton.setOnClickListener(v->{
+            Intent intent = new Intent(FourthActivity_PetDetails.this, SecondActivity_HomePage.class);
+
+            startActivity(intent);
         });
     }
 }
