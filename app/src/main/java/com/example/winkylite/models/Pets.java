@@ -7,7 +7,7 @@ import com.example.winkylite.database.DBHandler;
 public class Pets {
 
     /* VARIABLES */
-    private String petName, ageUnit, petGender, petType;
+    private String petName, ageUnit, petGender, petType, petActivity;
     /* months / years  ; male/female  ; cat/dog */
     private boolean isFixed, hasGoalWeight;
     /* Yes/No */
@@ -73,11 +73,25 @@ public class Pets {
     public double getRecKcal() {return recKcal;}
     public double getRecFats() {return recFats;}
 
+    public String getPetActivity() {
+        switch(activityLevel){
+            case 0: return "Low";
+            case 1: return "Medium";
+            case 2: return "High";
+            default: return "Medium";
+        }
+    }
+
     public void processToCalculator(){
         RecCalculator calc = new RecCalculator ();
-        this.recFats = calc.calcRecFats();
-        this.recKcal = calc.calcRecKcal();
-        this.recProtein = calc.calcRecProtein();
+
+        boolean isPuppyOrKitten = petAge < 12;
+
+        calc.performCalculations(petCurrentWeight, activityLevel, petType,
+                isFixed, petAge, isPuppyOrKitten, ageUnit);
+        this.recFats = calc.getRecFats();
+        this.recKcal = calc.getRecKcal();
+        this.recProtein = calc.getRecProtein();
     }
 
     public void saveToDB(Context context){

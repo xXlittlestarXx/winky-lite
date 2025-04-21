@@ -91,8 +91,11 @@ public class ThirdActivity_AddPetForm extends AppCompatActivity {
                     age , activityLevel,
                     currentWeight, goalWeight
             );
-
-
+            newPet.processToCalculator();
+            newPet.saveToDB(ThirdActivity_AddPetForm.this);
+            Intent intent = new Intent(ThirdActivity_AddPetForm.this, SecondActivity_HomePage.class);
+            startActivity(intent);
+            finish();
                 });
 
         setGoalWeight.setOnCheckedChangeListener((buttonView, isChecked) ->{

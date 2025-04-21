@@ -114,17 +114,27 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put("wPetAgeMY", Pets.getAgeUnit());
         values.put("wPetGender", Pets.getPetGender());
         values.put("wPetFixed", Pets.getIsFixed() ? "Yes" : "No");
-        values.put("wPetActivityLvl", Pets.getPetActivityLevel());
+        values.put("wPetActivityLvl", Pets.getPetActivity());
         values.put("wPetCurrentWeight", Pets.getPetCurrentWeight());
         values.put("wPetGoalWeight", Pets.getHasGoalWeight() ? Pets.getPetGoalWeight() : null);
         values.put("wPetKcalGoal", Pets.getRecKcal());
         values.put("wPetProteinGoal",Pets.getRecProtein());
         values.put("wPetFatsGoal", Pets.getRecFats());
         values.put("wPetMoistureGoal", 75);
+        values.put("wPetActivityLvl", Pets.getPetActivityLevel());
 
         db.insert("wPets", null, values);
 
         db.close();
 
+    }
+
+    public Cursor getAllPets() {
+        if(myDataBase == null || !myDataBase.isOpen()){
+            openDatabase();
+        }
+
+        String query = "SELECT wPetName FROM wPets WHERE userID = 1";
+        return myDataBase.rawQuery(query, null);
     }
 }
