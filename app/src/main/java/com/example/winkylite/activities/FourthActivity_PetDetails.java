@@ -43,19 +43,27 @@ public class FourthActivity_PetDetails extends AppCompatActivity {
         Button backButton = findViewById(R.id.backButton);
 
         profileButton.setOnClickListener(v->{
+            Intent intent = new Intent(FourthActivity_PetDetails.this, EigthActivity_PetProfile.class);
 
+            startActivity(intent);
         });
 
         addMealButton.setOnClickListener(v->{
+            Intent intent = new Intent(FourthActivity_PetDetails.this, FifthActivity_AddMeal.class);
 
+            startActivity(intent);
         });
 
         viewMealsButton.setOnClickListener(v->{
+            Intent intent = new Intent(FourthActivity_PetDetails.this, SixthActivity_ViewMeals.class);
 
+            startActivity(intent);
         });
 
         viewChartsButton.setOnClickListener(v->{
+            Intent intent = new Intent(FourthActivity_PetDetails.this, SeventhActivity_ViewCharts.class);
 
+            startActivity(intent);
         });
 
         backButton.setOnClickListener(v->{

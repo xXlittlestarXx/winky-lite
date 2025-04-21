@@ -33,8 +33,11 @@
             android:exported="false"/>
         <activity
             android:name=".activities.FourthActivity_PetDetails"
-            android:exported="false"
-            android:parentActivityName=".activities.SecondActivity_HomePage" />
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.FifthActivity_AddMeal"
+            android:exported="false" />
 
         <activity
             android:name=".database.TestInsert"
