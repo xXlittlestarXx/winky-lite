@@ -38,6 +38,15 @@
         <activity
             android:name=".activities.FifthActivity_AddMeal"
             android:exported="false" />
+        <activity
+            android:name=".activities.SixthActivity_ViewMeals"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SeventhActivity_ViewCharts"
+            android:exported="false" />
+        <activity
+            android:name=".activities.EigthActivity_PetProfile"
+            android:exported="false" />
 
         <activity
             android:name=".database.TestInsert"
