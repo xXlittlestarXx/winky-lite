@@ -123,7 +123,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put("wPetMoistureGoal", 75);
         values.put("wPetActivityLvl", Pets.getPetActivityLevel());
 
-        db.insert("wPets", null, values);
+        db.insert("Pets", null, values);
 
         db.close();
 
@@ -134,7 +134,7 @@ public class DBHandler extends SQLiteOpenHelper {
             openDatabase();
         }
 
-        String query = "SELECT wPetName FROM wPets WHERE userID = 1";
+        String query = "SELECT wPetName FROM Pets WHERE userID = 1";
         return myDataBase.rawQuery(query, null);
     }
 }

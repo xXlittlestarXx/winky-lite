@@ -28,14 +28,7 @@ public class SecondActivity_HomePage extends AppCompatActivity {
         setContentView(R.layout.activity_second);
 
         dbHelper = new DBHandler(this);
-        try {
-            dbHelper.createDatabase();
-            dbHelper.openDatabase();
-        } catch (IOException e){
-            e.printStackTrace();
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
+        dbHelper.openDatabase();
 
 
         addPetButton = findViewById(R.id.AddPetButton);
