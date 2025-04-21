@@ -60,6 +60,14 @@ public class ThirdActivity_AddPetForm extends AppCompatActivity {
 
         petGWeight.setVisibility(View.GONE);
 
+        setGoalWeight.setOnCheckedChangeListener((buttonView, isChecked) ->{
+            if(isChecked){
+                petGWeight.setVisibility(View.VISIBLE);
+            } else {
+                petGWeight.setVisibility(View.GONE);
+            }
+        });
+
         backButton.setOnClickListener(v-> {
             Intent intent = new Intent(ThirdActivity_AddPetForm.this, SecondActivity_HomePage.class);
 
@@ -86,7 +94,7 @@ public class ThirdActivity_AddPetForm extends AppCompatActivity {
 
             Pets newPet = new Pets(
 
-                    name, ageUnit, type, gender,
+                    name, ageUnit, gender, type,
                     isFixed, hasGoalWeight,
                     age , activityLevel,
                     currentWeight, goalWeight
@@ -97,13 +105,5 @@ public class ThirdActivity_AddPetForm extends AppCompatActivity {
             startActivity(intent);
             finish();
                 });
-
-        setGoalWeight.setOnCheckedChangeListener((buttonView, isChecked) ->{
-            if(isChecked){
-                petGWeight.setVisibility(View.VISIBLE);
-            } else {
-                petGWeight.setVisibility(View.GONE);
-            }
-        });
     }
 }

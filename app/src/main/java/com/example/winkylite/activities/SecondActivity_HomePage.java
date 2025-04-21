@@ -71,7 +71,7 @@ public class SecondActivity_HomePage extends AppCompatActivity {
                 });
                 petButtonContainer.addView(petButton);
                 count++;
-            } while (cursor.moveToNext() && count < 3);
+            } while (cursor.moveToNext() && count < 5);
             cursor.close();
         }
     }

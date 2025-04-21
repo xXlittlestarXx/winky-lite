@@ -85,12 +85,17 @@ public class Pets {
     public void processToCalculator(){
         RecCalculator calc = new RecCalculator ();
 
-        boolean isPuppyOrKitten = petAge < 12;
+        boolean isPuppyOrKitten;
+        if (ageUnit.equals("Months")) {
+            isPuppyOrKitten = petAge < 12;
+        } else{
+            isPuppyOrKitten = (petAge * 12) < 12;
+        }
 
         calc.performCalculations(petCurrentWeight, activityLevel, petType,
                 isFixed, petAge, isPuppyOrKitten, ageUnit);
-        this.recFats = calc.getRecFats();
         this.recKcal = calc.getRecKcal();
+        this.recFats = calc.getRecFats();
         this.recProtein = calc.getRecProtein();
     }
 
