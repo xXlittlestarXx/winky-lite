@@ -31,6 +31,10 @@
         <activity
             android:name=".activities.ThirdActivity_AddPetForm"
             android:exported="false"/>
+        <activity
+            android:name=".activities.FourthActivity_PetDetails"
+            android:exported="false"
+            android:parentActivityName=".activities.SecondActivity_HomePage" />
 
         <activity
             android:name=".database.TestInsert"
