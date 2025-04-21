@@ -1,10 +1,13 @@
-package com.example.winkylite;
+package com.example.winkylite.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.winkylite.database.DBHandler;
+import com.example.winkylite.R;
 
 public class ThirdActivity_AddPetForm extends AppCompatActivity {
     private Button backButton;

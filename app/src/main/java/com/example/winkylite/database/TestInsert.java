@@ -1,4 +1,4 @@
-package com.example.winkylite;
+package com.example.winkylite.database;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;

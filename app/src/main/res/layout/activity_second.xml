@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="#FCE9D8"
-    tools:context=".SecondActivity_HomePage">
+    tools:context=".activities.SecondActivity_HomePage">
 
     <Button
         android:id="@+id/AddPetButton"

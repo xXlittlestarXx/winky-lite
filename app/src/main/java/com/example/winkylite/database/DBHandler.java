@@ -1,4 +1,4 @@
-package com.example.winkylite;
+package com.example.winkylite.database;
 
 import android.content.Context;
 import android.database.Cursor;

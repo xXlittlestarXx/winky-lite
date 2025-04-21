@@ -15,7 +15,7 @@
 
         <activity
 
-            android:name=".MainActivity_LandingPage"
+            android:name=".activities.MainActivity_LandingPage"
             android:exported="true"
             android:theme="@style/Theme.WinkyLite">
             <intent-filter>
@@ -26,14 +26,14 @@
         </activity>
 
         <activity
-            android:name=".SecondActivity_HomePage"
+            android:name=".activities.SecondActivity_HomePage"
             android:exported="false"/>
         <activity
-            android:name=".ThirdActivity_AddPetForm"
+            android:name=".activities.ThirdActivity_AddPetForm"
             android:exported="false"/>
 
         <activity
-            android:name=".TestInsert"
+            android:name=".database.TestInsert"
             android:exported = "false" >
 
         </activity>
