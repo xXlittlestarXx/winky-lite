@@ -1,5 +1,9 @@
 package com.example.winkylite.models;
 
+import android.content.Context;
+
+import com.example.winkylite.calculators.RecCalculator;
+import com.example.winkylite.database.DBHandler;
 public class Pets {
 
     /* VARIABLES */
@@ -10,6 +14,11 @@ public class Pets {
     private int petAge, activityLevel;
     /* 0, 1, or 2 */
     private double petCurrentWeight, petGoalWeight;
+
+    /* FOR CALCULATIONS */
+    private double recProtein;
+    private double recKcal;
+    private double recFats;
 
     /* CONSTRUCTOR */
     public Pets (String petName, String ageUnit, String petGender, String petType,
@@ -37,6 +46,7 @@ public class Pets {
 
     }
 
+
     /* GETTERS */
 
     /* STRINGS */
@@ -59,6 +69,22 @@ public class Pets {
     public double getPetCurrentWeight() {return petCurrentWeight;}
     public double getPetGoalWeight() {return petGoalWeight;}
 
+    public double getRecProtein() {return recProtein;}
+    public double getRecKcal() {return recKcal;}
+    public double getRecFats() {return recFats;}
+
+    public void processToCalculator(){
+        RecCalculator calc = new RecCalculator ();
+        this.recFats = calc.calcRecFats();
+        this.recKcal = calc.calcRecKcal();
+        this.recProtein = calc.calcRecProtein();
+    }
+
+    public void saveToDB(Context context){
+        DBHandler db_helper = new DBHandler(context);
+        db_helper.insertPet(this);
+
+    }
 
 }
 
