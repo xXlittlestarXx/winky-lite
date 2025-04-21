@@ -27,7 +27,7 @@ public class SeventhActivity_ViewCharts extends AppCompatActivity {
         Button backButton = findViewById(R.id.backButton);
 
         backButton.setOnClickListener(v->{
-            Intent intent = new Intent(SeventhActivity_ViewCharts.this, SecondActivity_HomePage.class);
+            Intent intent = new Intent(SeventhActivity_ViewCharts.this, FourthActivity_PetDetails.class);
 
             startActivity(intent);
         });

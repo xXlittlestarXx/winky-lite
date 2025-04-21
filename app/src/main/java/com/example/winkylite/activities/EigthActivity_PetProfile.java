@@ -27,7 +27,7 @@ public class EigthActivity_PetProfile extends AppCompatActivity {
         Button backButton = findViewById(R.id.backButton);
 
         backButton.setOnClickListener(v->{
-            Intent intent = new Intent(EigthActivity_PetProfile.this, SecondActivity_HomePage.class);
+            Intent intent = new Intent(EigthActivity_PetProfile.this, FourthActivity_PetDetails.class);
 
             startActivity(intent);
         });

@@ -27,7 +27,7 @@ public class FifthActivity_AddMeal extends AppCompatActivity {
         Button backButton = findViewById(R.id.backButton);
 
         backButton.setOnClickListener(v->{
-            Intent intent = new Intent(FifthActivity_AddMeal.this, SecondActivity_HomePage.class);
+            Intent intent = new Intent(FifthActivity_AddMeal.this, FourthActivity_PetDetails.class);
 
             startActivity(intent);
         });

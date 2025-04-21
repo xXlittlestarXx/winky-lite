@@ -27,7 +27,7 @@ public class SixthActivity_ViewMeals extends AppCompatActivity {
         Button backButton = findViewById(R.id.backButton);
 
         backButton.setOnClickListener(v->{
-            Intent intent = new Intent(SixthActivity_ViewMeals.this, SecondActivity_HomePage.class);
+            Intent intent = new Intent(SixthActivity_ViewMeals.this, FourthActivity_PetDetails.class);
 
             startActivity(intent);
         });
