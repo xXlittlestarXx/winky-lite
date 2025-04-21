@@ -81,7 +81,7 @@
 
             <RadioButton
                 android:id="@+id/months"
-                android:layout_width="wrap_content"
+                android:layout_width="120dp"
                 android:layout_height="48dp"
                 android:text="Months" />
 
@@ -157,52 +157,117 @@
         </RadioGroup>
 
         <TextView
-            android:id="@+id/activityLabel"
+            android:id="@+id/fixedLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Activity Level:"
+            android:text="Fixed:"
             android:textSize="18sp"
             android:layout_marginBottom="10dp"
             app:layout_constraintTop_toBottomOf="@+id/genderButtons"
             app:layout_constraintStart_toStartOf="parent" />
+        <RadioGroup
+            android:id="@+id/fixedButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/fixedLabel"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <RadioButton
+                android:id="@+id/fixed"
+                android:layout_width="120dp"
+                android:layout_height="48dp"
+                android:text="Yes" />
+
+            <RadioButton
+                android:id="@+id/notFixed"
+                android:layout_width="120dp"
+                android:layout_height="48dp"
+                android:text="No" />
+        </RadioGroup>
 
         <SeekBar
             android:id="@+id/activitySlider"
             android:layout_width="300dp"
             android:layout_height="50dp"
+            android:layout_marginTop="4dp"
             android:max="2"
             android:progress="1"
             android:progressTint="#000000"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lowLevel" />
+
+        <TextView
+            android:id="@+id/activityLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Activity Level:"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fixedButtons" />
+
+        <TextView
+            android:id="@+id/lowLevel"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Low"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@id/activitySlider"
             app:layout_constraintTop_toBottomOf="@+id/activityLabel" />
 
         <TextView
-            android:id="@+id/weightLabel"
+            android:id="@+id/highLevel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Current Weight (kg):"
+            android:layout_marginTop="4dp"
+            android:text="High"
             android:textSize="18sp"
-            app:layout_constraintTop_toBottomOf="@+id/activitySlider"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toEndOf="@id/activitySlider"
+            app:layout_constraintTop_toBottomOf="@+id/activityLabel" />
 
         <EditText
             android:id="@+id/currentWeight"
             android:layout_width="150dp"
             android:layout_height="48dp"
+            android:layout_marginTop="4dp"
             android:hint="4.2"
             android:inputType="numberDecimal"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintTop_toBottomOf="@+id/weightLabel"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/weightLabel" />
 
         <CheckBox
             android:id="@+id/goalWeightCheckbox"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
+            android:layout_marginTop="4dp"
             android:text="Set Goal Weight"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintTop_toBottomOf="@+id/currentWeight"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/currentWeight" />
+
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#1a36b4"
+            android:text="Submit"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/goalWeight" />
+
+        <TextView
+            android:id="@+id/weightLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Current Weight (kg):"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/activitySlider" />
 
         <EditText
             android:id="@+id/goalWeight"
@@ -210,20 +275,8 @@
             android:layout_height="48dp"
             android:hint="Goal Weight"
             android:inputType="numberDecimal"
-            android:visibility="gone"
+            android:visibility = "gone"
             app:layout_constraintTop_toBottomOf="@+id/goalWeightCheckbox"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/submitButton"
-            android:layout_width="200dp"
-            android:layout_height="60dp"
-            android:text="Submit"
-            android:textSize="18sp"
-            android:backgroundTint="#1a36b4"
-            android:textColor="#FFFFFF"
-            android:layout_marginTop="30dp"
-            app:layout_constraintTop_toBottomOf="@+id/goalWeight"
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
