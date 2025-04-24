@@ -1,0 +1,38 @@
+xXlittlestarXx Proprietary License  
+Version 1.0 • April 2025
+
+Copyright (c) 2025 xXlittlestarXx. All rights reserved.
+
+This source code and any associated files, assets, designs, or documentation (collectively referred to as the "Software") are proprietary and confidential intellectual property of xXlittlestarXx and its authorized contributors.
+
+Permission is hereby granted to view the contents of this repository for personal, non-commercial, and non-distributive purposes only.
+
+Restrictions
+Unless prior written authorization is explicitly granted by xXlittlestarXx, you are strictly prohibited from:
+
+- Copying, reproducing, redistributing, or modifying the Software in whole or in part
+- Using any code, logic, assets, or structure from the Software in your own projects
+- Incorporating this Software into commercial or non-commercial applications
+- Using the Software or its design for training datasets, AI models, or code reference
+- Creating derivative works or tutorials based on any portion of this Software
+
+The names Winky, WinkyLite, and all user interface designs associated with this Software are protected under this license. You are prohibited from using, reproducing, or modifying these names or UI elements without explicit written permission from xXlittlestarXx.
+
+Third-Party Components
+This project was developed using external tools and libraries, including but not limited to:
+
+- Android SDK / Android Studio
+- SQLite
+- Java
+- Other third-party libraries
+
+These components are subject to their own respective licenses and are not covered by this license. Use of these third-party components is governed by the respective terms and conditions provided by their creators. 
+
+Authorized Use
+Requests for licenses, references, or integration of this Software into third-party applications must be submitted in writing and approved by xXlittlestarXx. Approval is granted on a case-by-case basis.
+
+For permission inquiries, contact: x.littlestar333@gmail.com
+
+Legal Notice
+Violation of this license agreement may result in legal action.
+This license is governed under the laws of the State of New Jersey, United States.
