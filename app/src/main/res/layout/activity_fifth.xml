@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Back"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="5dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -31,6 +31,75 @@
             android:layout_marginTop="20dp"
             app:layout_constraintTop_toBottomOf="@+id/backButton"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date:"
+        android:textSize="24sp"
+        android:textColor="#1a36b4"
+        android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/editTextDate"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:inputType="date"
+            android:hint="MM/DD/YYYY"
+            tools:layout_editor_absoluteX="164dp"
+            tools:layout_editor_absoluteY="64dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintStart_toEndOf="@id/date"/>
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time:"
+            android:textSize="24sp"
+            android:textColor="#1a36b4"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/date"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/editTextTime"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:inputType="time"
+            android:hint="HH:MM"
+            tools:layout_editor_absoluteX="164dp"
+            tools:layout_editor_absoluteY="64dp"
+            android:layout_marginTop="0dp"
+            app:layout_constraintTop_toBottomOf="@id/editTextDate"
+            app:layout_constraintStart_toEndOf="@id/time"/>
+
+        <CheckBox
+            android:id="@+id/addItemCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="Add New Item"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="263dp"
+            android:layout_marginTop="0dp"
+            app:layout_constraintTop_toBottomOf="@id/editTextTime"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <Spinner
+            android:id="@+id/itemDropDownBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"
+            app:layout_constraintTop_toBottomOf="@id/addItemCheckBox"
+            app:layout_constraintStart_toStartOf="parent"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
