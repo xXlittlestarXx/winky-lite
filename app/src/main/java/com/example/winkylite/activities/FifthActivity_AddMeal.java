@@ -42,7 +42,7 @@ public class FifthActivity_AddMeal extends AppCompatActivity implements AdapterV
         etFats = findViewById(R.id.etFats);
         etProtein = findViewById(R.id.etProtein);
         dropdown = findViewById(R.id.itemDropDownBox);
-        addItemCheckBox = findViewById(R.id.addItemCheckBox);
+        //addItemCheckBox = findViewById(R.id.addItemCheckBox);
         Button btnSave = findViewById(R.id.btnSave);
         Button btnBack = findViewById(R.id.backButton);
 
