@@ -32,19 +32,27 @@ public class DBHandler extends SQLiteOpenHelper {
         boolean dbExist = checkDatabase();
 
         if (!dbExist) {
-            // Don't call getReadableDatabase(); just make sure the dir exists
             File dbFile = new File(DB_PATH);
             dbFile.getParentFile().mkdirs();
-
             try {
                 copyDatabase();
             } catch (IOException e) {
                 throw new Error("Error copying database");
             }
+        } else {
+            int currentVersion = getDatabaseVersion();
+            if (currentVersion < DB_VERSION) {
+                updateDatabase();
+            }
         }
     }
 
-    private boolean checkDatabase() {
+    private void updateDatabase() {
+        SQLiteDatabase db = getWritableDatabase();
+        dbUpdater.update(db, getDatabaseVersion(),DB_VERSION);
+    }
+
+    private boolean checkDatabase () {
         SQLiteDatabase checkDB = null;
         try {
             checkDB = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READONLY);
@@ -54,11 +62,11 @@ public class DBHandler extends SQLiteOpenHelper {
 
         if (checkDB != null) {
             checkDB.close();
-        }
+            }
         return checkDB != null;
     }
 
-    private void copyDatabase() throws IOException {
+    private void copyDatabase () throws IOException {
         InputStream input = context.getAssets().open(DB_NAME);
         OutputStream output = new FileOutputStream(DB_PATH);
 
@@ -71,15 +79,22 @@ public class DBHandler extends SQLiteOpenHelper {
         output.flush();
         output.close();
         input.close();
+        updateDatabaseVersion(DB_VERSION);
+    }
+    private int getDatabaseVersion(){
+        return DB_VERSION;
+    }
+    private void updateDatabaseVersion(int dbVersion) {
+        SQLiteDatabase db = getWritableDatabase();
     }
 
-    public void openDatabase() throws SQLException {
+    public void openDatabase () throws SQLException {
         myDataBase = SQLiteDatabase.openDatabase(DB_PATH, null,
-                SQLiteDatabase.OPEN_READWRITE);
+                        SQLiteDatabase.OPEN_READWRITE);
     }
 
     @Override
-    public synchronized void close() {
+    public synchronized void close () {
         if (myDataBase != null) {
             myDataBase.close();
         }
@@ -87,60 +102,60 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate (SQLiteDatabase db){
 
     }
 
     @Override
-     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade (SQLiteDatabase db,int oldVersion, int newVersion){
         oldVersion = 2;
         if (oldVersion < DB_VERSION) {
             dbUpdater.update(db, oldVersion, DB_VERSION);
         }
     }
 
-    public Cursor queryData(String query) {
+    public Cursor queryData (String query){
         return myDataBase.rawQuery(query, null);
     }
 
-    public void insertPet(Pets Pets) {
+    public void insertPet (Pets Pets){
 
         SQLiteDatabase db = SQLiteDatabase.openDatabase
-                (DB_PATH,null, SQLiteDatabase.OPEN_READWRITE);
+                (DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
 
-        ContentValues values = new ContentValues();
+                ContentValues values = new ContentValues();
 
-        values.put("userID", 1);
-        values.put("wPetName", Pets.getPetName());
-        values.put("wPetType", Pets.getPetType());
-        values.put("wPetAge", Pets.getPetAge());
-        values.put("wPetAgeMY", Pets.getAgeUnit());
-        values.put("wPetGender", Pets.getPetGender());
-        values.put("wPetFixed", Pets.getIsFixed() ? "Yes" : "No");
-        values.put("wPetActivityLvl", Pets.getPetActivity());
-        values.put("wPetActivity", (double) Pets.getPetActivityLevel());
-        values.put("wPetCurrentWeight", Pets.getPetCurrentWeight());
-        values.put("wPetGoalWeight", Pets.getHasGoalWeight() ? Pets.getPetGoalWeight() : null);
-        values.put("wPetKcalGoal", Pets.getRecKcal());
-        values.put("wPetProteinGoal", Pets.getRecProtein());
-        values.put("wPetFatsGoal", Pets.getRecFats());
-        values.put("wPetMoistureGoal", 75);
+                values.put("userID", 1);
+                values.put("wPetName", Pets.getPetName());
+                values.put("wPetType", Pets.getPetType());
+                values.put("wPetAge", Pets.getPetAge());
+                values.put("wPetAgeMY", Pets.getAgeUnit());
+                values.put("wPetGender", Pets.getPetGender());
+                values.put("wPetFixed", Pets.getIsFixed() ? "Yes" : "No");
+                values.put("wPetActivityLvl", Pets.getPetActivity());
+                values.put("wPetActivity", (double) Pets.getPetActivityLevel());
+                values.put("wPetCurrentWeight", Pets.getPetCurrentWeight());
+                values.put("wPetGoalWeight", Pets.getHasGoalWeight() ? Pets.getPetGoalWeight() : null);
+                values.put("wPetKcalGoal", Pets.getRecKcal());
+                values.put("wPetProteinGoal", Pets.getRecProtein());
+                values.put("wPetFatsGoal", Pets.getRecFats());
+                values.put("wPetMoistureGoal", 75);
 
-        db.insert("Pets", null, values);
+                db.insert("Pets", null, values);
 
-        db.close();
+                db.close();
 
     }
 
-    public Cursor getAllPets() {
-        if(myDataBase == null || !myDataBase.isOpen()){
+    public Cursor getAllPets () {
+        if (myDataBase == null || !myDataBase.isOpen()) {
             openDatabase();
         }
 
         String query = "SELECT wPetName FROM Pets WHERE userID = 1";
         return myDataBase.rawQuery(query, null);
     }
-    public int getPetIdByName(String petName) {
+    public int getPetIdByName (String petName){
         if (myDataBase == null || !myDataBase.isOpen()) {
             openDatabase();
         }
@@ -162,8 +177,8 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public long addMeal(int petID, String date, String time, String description,
-                        double avgKcal, double avgMoisture, double avgFats, double avgProtein) {
+    public long addMeal ( int petID, String date, String time, String description,
+                          double avgKcal, double avgMoisture, double avgFats, double avgProtein){
         SQLiteDatabase db = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
 
         ContentValues values = new ContentValues();
