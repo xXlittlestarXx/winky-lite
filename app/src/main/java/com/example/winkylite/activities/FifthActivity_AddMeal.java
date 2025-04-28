@@ -27,7 +27,8 @@ import java.io.IOException;
 public class FifthActivity_AddMeal extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
     private EditText etDate, etTime, etKcal, etMoisture, etFats, etProtein;
     private Spinner dropdown;
-    private CheckBox addItemCheckBox;
+    //private CheckBox addItemCheckBox;
+    private Button addItemButton, saveButton, backButton;
     private DBHandler dbHandler;
 
     @Override
@@ -42,7 +43,7 @@ public class FifthActivity_AddMeal extends AppCompatActivity implements AdapterV
         etFats = findViewById(R.id.etFats);
         etProtein = findViewById(R.id.etProtein);
         dropdown = findViewById(R.id.itemDropDownBox);
-        //addItemCheckBox = findViewById(R.id.addItemCheckBox);
+        addItemButton = findViewById(R.id.addItemButton);
         Button btnSave = findViewById(R.id.btnSave);
         Button btnBack = findViewById(R.id.backButton);
 
