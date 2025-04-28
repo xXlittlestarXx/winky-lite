@@ -7,7 +7,7 @@ public class dbUpdater {
     private static final String TAG = "DatabaseUpdater";
     private  static final int LATEST_DB_VERSION = 3;
 
-    public static void migrate(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public static void update(SQLiteDatabase db, int oldVersion, int newVersion) {
         for (int version = oldVersion + 1; version <= newVersion; version++) {
             switch (version) {
                 case 1:

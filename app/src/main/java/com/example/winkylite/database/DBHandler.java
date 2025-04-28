@@ -137,4 +137,9 @@ public class DBHandler extends SQLiteOpenHelper {
         String query = "SELECT wPetName FROM Pets WHERE userID = 1";
         return myDataBase.rawQuery(query, null);
     }
+
+    public long addMeal(int currentPetID, String string, String string1, String string2, double total, double total1, double total2, double total3) {
+        int i = 0;
+        return i;
+    }
 }

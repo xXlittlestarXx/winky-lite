@@ -1,74 +1,122 @@
 package com.example.winkylite.activities;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.SQLException;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.CheckBox;
 
-import com.example.winkylite.database.DBHandler;
 import com.example.winkylite.R;
+import com.example.winkylite.database.DBHandler;
+import com.example.winkylite.calculators.mealCalculator;
+import com.example.winkylite.models.mealItem;
 
-import java.io.IOException;
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class FifthActivity_AddMeal extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
-    private EditText etDate, etTime, etKcal, etMoisture, etFats, etProtein;
-    private Spinner dropdown;
-    //private CheckBox addItemCheckBox;
-    private Button addItemButton, saveButton, backButton;
-    private DBHandler dbHandler;
+    private LinearLayout nutritionInputsContainer;
+    private EditText etDate, etTime, etDescription;
+    private Button btnBack, btnAddItem, btnSave;
+    private DBHandler dbhandler;
+    private List<mealItem> mealItemList = new ArrayList<>();
+    private int currentPetID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fifth);
 
-        etDate = findViewById(R.id.editTextDate);
-        etTime = findViewById(R.id.editTextTime);
-        etKcal = findViewById(R.id.etKcal);
-        etMoisture = findViewById(R.id.etMoisture);
-        etFats = findViewById(R.id.etFats);
-        etProtein = findViewById(R.id.etProtein);
-        dropdown = findViewById(R.id.itemDropDownBox);
-        addItemButton = findViewById(R.id.addItemButton);
-        Button btnSave = findViewById(R.id.btnSave);
-        Button btnBack = findViewById(R.id.backButton);
+        initializeViews();
+        setupUI();
+    }
+    private void initializeViews(){
+        etDate = findViewById(R.id.etDate);
+        etTime = findViewById(R.id.etTime);
+        etDescription = findViewById(R.id.etDescription);
+        nutritionInputsContainer = findViewById((R.id.nutritionInputsContainer));
+
+        btnBack = findViewById(R.id.btnBack);
+        btnAddItem = findViewById(R.id.btnAddItem);
+        btnSave = findViewById(R.id.btnSave);
+
+        dbhandler = new DBHandler(this);
+    }
+
+    private void setupUI() {
 
         etDate.setOnClickListener(v -> showDatePicker());
         etTime.setOnClickListener(v -> showTimePicker());
 
-        btnBack.setOnClickListener(v->{
+        btnBack.setOnClickListener(v -> {
             Intent intent = new Intent(FifthActivity_AddMeal.this, FourthActivity_PetDetails.class);
 
             startActivity(intent);
         });
 
-        //Spinner dropdown = findViewById(R.id.itemDropDownBox);
+        btnAddItem.setOnClickListener(v -> addItemGroup());
+        btnSave.setOnClickListener(v -> saveMeal());
+    }
+    private void addItemGroup(){
+        View itemView = getLayoutInflater().inflate(
+                R.layout.meal_item_template, null);
 
-        String[] items = new String[]{"kibble", "wet", "frozen", "topper", "treat",
-                "supplement", "other"};
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, items);
-
+        Spinner spinner = itemView.findViewById(R.id.itemDropDownBox);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.item_types,
+                android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        dropdown.setAdapter(adapter);
-        dropdown.setOnItemSelectedListener(this);
+        spinner.setAdapter(adapter);
+        nutritionInputsContainer.addView(itemView);
+    }
+    private void saveMeal() {
+        mealItemList.clear();
+
+        for (int i = 0; i < nutritionInputsContainer.getChildCount(); i++){
+            View itemView = nutritionInputsContainer.getChildAt(i);
+
+            EditText etKcal = itemView.findViewById(R.id.etKcal);
+            EditText etMoisture = itemView.findViewById(R.id.etMoisture);
+            EditText etFats = itemView.findViewById(R.id.etFats);
+            EditText etProtein = itemView.findViewById(R.id.etProtein);
+
+            double kcal = parseDouble(etKcal);
+            double moisture = parseDouble(etMoisture);
+            double fats = parseDouble(etFats);
+            double protein = parseDouble(etProtein);
+
+            mealItem item = new mealItem(kcal, moisture, fats, protein);
+            mealItemList.add(item);
+        }
+
+        double[] totals = mealCalculator.calculateMeal(mealItemList);
+
+        dbhandler.addMeal(
+                currentPetID,
+                etDate.getText().toString(),
+                etTime.getText().toString(),
+                etDescription.getText().toString(),
+                totals[0], // kcal
+                totals[1], // moisture
+                totals[2], // fats
+                totals[3]  // protein
+        );
     }
 
+    private double parseDouble(EditText et) {
+        try {
+            return Double.parseDouble(et.getText().toString());
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
     private void showTimePicker() {
     }
 
