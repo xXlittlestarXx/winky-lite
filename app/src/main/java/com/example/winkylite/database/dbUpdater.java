@@ -28,6 +28,24 @@ public class dbUpdater {
     private static void runV1Update(SQLiteDatabase db) {
         db.beginTransaction();
         try {
+            db.execSQL("CREATE TABLE IF NOT EXISTS Pets (" +
+                    "wPetID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "userID INTEGER NOT NULL," +
+                    "wPetName TEXT NOT NULL," +
+                    "wPetType TEXT," +
+                    "wPetAge INTEGER," +
+                    "wPetAgeMY TEXT," +
+                    "wPetGender TEXT," +
+                    "wPetFixed TEXT," +
+                    "wPetActivityLvl TEXT," +
+                    "wPetActivity REAL," +
+                    "wPetCurrentWeight REAL," +
+                    "wPetGoalWeight REAL," +
+                    "wPetKcalGoal REAL," +
+                    "wPetProteinGoal REAL," +
+                    "wPetFatsGoal REAL," +
+                    "wPetMoistureGoal REAL);");
+
             db.execSQL("CREATE TABLE IF NOT EXISTS Meals (" +
                     "wMealID INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "petID INTEGER NOT NULL," +
@@ -48,6 +66,7 @@ public class dbUpdater {
                     "protein REAL NOT NULL," +
                     "fats REAL NOT NULL);");
             db.setTransactionSuccessful();
+
         } catch (Exception e) {
             Log.e(TAG, "V1 Migration failed: " + e.getMessage());
         } finally {

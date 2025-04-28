@@ -86,22 +86,17 @@ public class FifthActivity_AddMeal extends AppCompatActivity implements AdapterV
     private void saveMeal() {
         mealItemList.clear();
 
-        for (int i = 0; i < nutritionInputsContainer.getChildCount(); i++){
-            View itemView = nutritionInputsContainer.getChildAt(i);
+        View itemView = nutritionInputsContainer.getChildAt(i);
 
-            EditText etKcal = itemView.findViewById(R.id.etKcal);
-            EditText etMoisture = itemView.findViewById(R.id.etMoisture);
-            EditText etFats = itemView.findViewById(R.id.etFats);
-            EditText etProtein = itemView.findViewById(R.id.etProtein);
+        EditText etKcal = itemView.findViewById(R.id.etKcal);
+        EditText etMoisture = itemView.findViewById(R.id.etMoisture);
+        EditText etFats = itemView.findViewById(R.id.etFats);
+        EditText etProtein = itemView.findViewById(R.id.etProtein);
 
-            double kcal = parseDouble(etKcal);
-            double moisture = parseDouble(etMoisture);
-            double fats = parseDouble(etFats);
-            double protein = parseDouble(etProtein);
-
-            mealItem item = new mealItem(kcal, moisture, fats, protein);
-            mealItemList.add(item);
-        }
+        double kcal = parseDouble(etKcal);
+        double moisture = parseDouble(etMoisture);
+        double fats = parseDouble(etFats);
+        double protein = parseDouble(etProtein);
 
         double[] totals = mealCalculator.calculateMeal(mealItemList);
 

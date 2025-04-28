@@ -82,7 +82,15 @@ public class DBHandler extends SQLiteOpenHelper {
         updateDatabaseVersion(DB_VERSION);
     }
     private int getDatabaseVersion(){
-        return DB_VERSION;
+        int version = 0;
+        try {
+            SQLiteDatabase db = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READONLY);
+            version = db.getVersion();
+            db.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return version;
     }
     private void updateDatabaseVersion(int dbVersion) {
         SQLiteDatabase db = getWritableDatabase();
@@ -108,9 +116,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade (SQLiteDatabase db,int oldVersion, int newVersion){
-        oldVersion = 2;
-        if (oldVersion < DB_VERSION) {
-            dbUpdater.update(db, oldVersion, DB_VERSION);
+        if (oldVersion < newVersion) {
+            dbUpdater.update(db, oldVersion, newVersion);
         }
     }
 
@@ -160,7 +167,7 @@ public class DBHandler extends SQLiteOpenHelper {
             openDatabase();
         }
 
-        int petId = -1;
+        int wPetId = -1;
         String query = "SELECT wPetID FROM Pets WHERE wPetName = ?";
         Cursor cursor = myDataBase.rawQuery(query, new String[]{petName});
 
@@ -168,12 +175,12 @@ public class DBHandler extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 int columnIndex = cursor.getColumnIndex("wPetID");
                 if (columnIndex != -1) {
-                    petId = cursor.getInt(columnIndex);
+                    wPetId = cursor.getInt(columnIndex);
                 }
             }
             cursor.close();
         }
-        return petId;
+        return wPetId;
     }
 
 
