@@ -17,7 +17,7 @@ import java.io.OutputStream;
 
 public class DBHandler extends SQLiteOpenHelper {
     private static final String DB_NAME = "myDBupdated.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 3;
     private final Context context;
     private String DB_PATH;
     private SQLiteDatabase myDataBase;
@@ -93,7 +93,10 @@ public class DBHandler extends SQLiteOpenHelper {
 
     @Override
      public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Handle upgrades if needed
+        oldVersion = 2;
+        if (oldVersion < DB_VERSION) {
+            dbUpdater.update(db, oldVersion, DB_VERSION);
+        }
     }
 
     public Cursor queryData(String query) {

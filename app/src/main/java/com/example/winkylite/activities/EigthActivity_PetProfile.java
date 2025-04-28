@@ -19,6 +19,9 @@ import java.io.IOException;
 
 
 public class EigthActivity_PetProfile extends AppCompatActivity {
+    private DBHandler dbHandler;
+    private TextView petNameTextView, petAgeTextView, petTypeTextView, petActivityTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
