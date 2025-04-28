@@ -113,51 +113,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="16dp">
 
-            <LinearLayout
-                android:id="@+id/itemTemplate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/btnAddItem"
-                android:orientation="vertical"
 
-                android:visibility="gone">
-                <Spinner
-                    android:id="@+id/itemDropDownBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown"
-                    app:layout_constraintTop_toBottomOf="@id/btnAddItem"
-                    app:layout_constraintStart_toStartOf="parent"/>
-
-                <EditText
-                    android:id="@+id/etKcal"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:hint="Calories (kcal)"
-                    android:inputType="number"/>
-
-                <EditText
-                    android:id="@+id/etMoisture"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:hint="Moisture Content (%)"
-                    android:inputType="numberDecimal"/>
-
-                <EditText
-                    android:id="@+id/etFats"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:hint="Fats (%)"
-                    android:inputType="numberDecimal"/>
-
-                <EditText
-                    android:id="@+id/etProtein"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:hint="Protein (%)"
-                    android:inputType="numberDecimal"/>
-            </LinearLayout>
         </LinearLayout>
 
         <Button
