@@ -2,6 +2,8 @@ package com.example.winkylite.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -26,12 +28,14 @@ public class FifthActivity_AddMeal extends AppCompatActivity implements AdapterV
     private Button btnBack, btnAddItem, btnSave;
     private DBHandler dbhandler;
     private List<mealItem> mealItemList = new ArrayList<>();
-    private int currentPetID = 1;
+    private int currentPetID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fifth);
+
+        currentPetID = getIntent().getIntExtra("SELECTED_PET_ID", -1);
 
         initializeViews();
         setupUI();
@@ -65,7 +69,7 @@ public class FifthActivity_AddMeal extends AppCompatActivity implements AdapterV
     }
     private void addItemGroup(){
         View itemView = getLayoutInflater().inflate(
-                R.layout.meal_item_template, null);
+                R.layout.meal_item_template, nutritionInputsContainer, false);
 
         Spinner spinner = itemView.findViewById(R.id.itemDropDownBox);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -74,6 +78,9 @@ public class FifthActivity_AddMeal extends AppCompatActivity implements AdapterV
                 android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
+        itemView.setVisibility(View.VISIBLE);
+
         nutritionInputsContainer.addView(itemView);
     }
     private void saveMeal() {
@@ -118,9 +125,23 @@ public class FifthActivity_AddMeal extends AppCompatActivity implements AdapterV
         }
     }
     private void showTimePicker() {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                (view, hourOfDay, minute) -> {
+                    String selectedTime = String.format("%02d:%02d", hourOfDay, minute);
+                    etTime.setText(selectedTime);
+                },
+                12, 0, true);
+        timePickerDialog.show();
     }
 
     private void showDatePicker() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                (view, year, month, day) -> {
+                    String selectedDate = (month + 1) + "/" + day + "/" + year;
+                    etDate.setText(selectedDate);
+                },
+                2025, 0, 1);
+        datePickerDialog.show();
     }
 
     @Override

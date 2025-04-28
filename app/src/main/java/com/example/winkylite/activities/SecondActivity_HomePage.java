@@ -63,10 +63,13 @@ public class SecondActivity_HomePage extends AppCompatActivity {
                 Button petButton = new Button(this);
                 petButton.setText(petName);
                 petButton.setOnClickListener(v->{
+                    int petID = dbHelper.getPetIdByName(petName);
+
                     Intent detailsIntent = new Intent(
                             SecondActivity_HomePage.this,
                             FourthActivity_PetDetails.class );
                     detailsIntent.putExtra("SELECTED_PET_NAME", petName);
+                    detailsIntent.putExtra("SELECTED_PET_ID", petID);
                     startActivity(detailsIntent);
                 });
                 petButtonContainer.addView(petButton);

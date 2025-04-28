@@ -137,6 +137,24 @@ public class DBHandler extends SQLiteOpenHelper {
         String query = "SELECT wPetName FROM Pets WHERE userID = 1";
         return myDataBase.rawQuery(query, null);
     }
+    public int getPetIdByName(String petName) {
+        if (myDataBase == null || !myDataBase.isOpen()) {
+            openDatabase();
+        }
+
+        int petId = -1;
+        String query = "SELECT wPetID FROM Pets WHERE wPetName = ?";
+        Cursor cursor = myDataBase.rawQuery(query, new String[]{petName});
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                petId = cursor.getInt(cursor.getColumnIndex("wPetID"));
+            }
+            cursor.close();
+        }
+        return petId;
+    }
+
 
     public long addMeal(int currentPetID, String string, String string1, String string2, double total, double total1, double total2, double total3) {
         int i = 0;

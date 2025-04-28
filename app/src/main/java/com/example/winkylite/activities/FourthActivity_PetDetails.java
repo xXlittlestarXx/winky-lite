@@ -19,12 +19,17 @@ import java.io.IOException;
 
 
 public class FourthActivity_PetDetails extends AppCompatActivity {
+
+    private String petName;
+    private int petID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fourth);
 
-        String petName = getIntent().getStringExtra("SELECTED_PET_NAME");
+        petName = getIntent().getStringExtra("SELECTED_PET_NAME");
+        petID = getIntent().getIntExtra("SELECTED_PET_ID", -1);
 
         TextView titlePetName = findViewById(R.id.title);
         titlePetName.setText(petName);
@@ -44,25 +49,29 @@ public class FourthActivity_PetDetails extends AppCompatActivity {
 
         profileButton.setOnClickListener(v->{
             Intent intent = new Intent(FourthActivity_PetDetails.this, EigthActivity_PetProfile.class);
-
+            intent.putExtra("SELECTED_PET_NAME", petName);
+            intent.putExtra("SELECTED_PET_ID", petID);
             startActivity(intent);
         });
 
         addMealButton.setOnClickListener(v->{
             Intent intent = new Intent(FourthActivity_PetDetails.this, FifthActivity_AddMeal.class);
-
+            intent.putExtra("SELECTED_PET_NAME", petName);
+            intent.putExtra("SELECTED_PET_ID", petID);
             startActivity(intent);
         });
 
         viewMealsButton.setOnClickListener(v->{
             Intent intent = new Intent(FourthActivity_PetDetails.this, SixthActivity_ViewMeals.class);
-
+            intent.putExtra("SELECTED_PET_NAME", petName);
+            intent.putExtra("SELECTED_PET_ID", petID);
             startActivity(intent);
         });
 
         viewChartsButton.setOnClickListener(v->{
             Intent intent = new Intent(FourthActivity_PetDetails.this, SeventhActivity_ViewCharts.class);
-
+            intent.putExtra("SELECTED_PET_NAME", petName);
+            intent.putExtra("SELECTED_PET_ID", petID);
             startActivity(intent);
         });
 
