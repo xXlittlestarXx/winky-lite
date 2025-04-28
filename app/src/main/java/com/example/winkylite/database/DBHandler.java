@@ -148,7 +148,10 @@ public class DBHandler extends SQLiteOpenHelper {
 
         if (cursor != null) {
             if (cursor.moveToFirst()) {
-                petId = cursor.getInt(cursor.getColumnIndex("wPetID"));
+                int columnIndex = cursor.getColumnIndex("wPetID");
+                if (columnIndex != -1) {
+                    petId = cursor.getInt(columnIndex);
+                }
             }
             cursor.close();
         }
@@ -156,8 +159,24 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public long addMeal(int currentPetID, String string, String string1, String string2, double total, double total1, double total2, double total3) {
-        int i = 0;
-        return i;
+    public long addMeal(int petID, String date, String time, String description,
+                        double avgKcal, double avgMoisture, double avgFats, double avgProtein) {
+        SQLiteDatabase db = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
+
+        ContentValues values = new ContentValues();
+        values.put("wPetID", petID);
+        values.put("wMealDate", date);
+        values.put("wMealTime", time);
+        values.put("wMealDescription", description);
+        values.put("wMealAvgKcal", avgKcal);
+        values.put("wMealAvgMoisture", avgMoisture);
+        values.put("wMealAvgFats", avgFats);
+        values.put("wMealAvgProtein", avgProtein);
+
+        long result = db.insert("Meals", null, values);
+
+        db.close();
+
+        return result;
     }
 }
