@@ -184,24 +184,47 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public long addMeal ( int petID, String date, String time, String description,
-                          double avgKcal, double avgMoisture, double avgFats, double avgProtein){
+    public long addMeal (int petID, String date, String time, String description,
+                         String itemType,
+                         Double kcalCount, Double moistureAmt, Double proteinAmt, Double fatsAmt,
+                         Double totalKcal, Double totalMoisture, Double totalProtein, Double totalFats){
         SQLiteDatabase db = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
 
-        ContentValues values = new ContentValues();
-        values.put("wPetID", petID);
-        values.put("wMealDate", date);
-        values.put("wMealTime", time);
-        values.put("wMealDescription", description);
-        values.put("wMealAvgKcal", avgKcal);
-        values.put("wMealAvgMoisture", avgMoisture);
-        values.put("wMealAvgFats", avgFats);
-        values.put("wMealAvgProtein", avgProtein);
+        ContentValues values = prepareMealContentValues(
+                petID, date, time, description, itemType,
+                kcalCount, moistureAmt, proteinAmt, fatsAmt,
+                totalKcal, totalMoisture, totalProtein, totalFats
+        );
 
         long result = db.insert("Meals", null, values);
 
         db.close();
 
         return result;
+    }
+    private ContentValues prepareMealContentValues(
+            int petID, String date, String time, String description, String itemType,
+            Double kcalCount, Double moistureAmt, Double proteinAmt, Double fatsAmt,
+            Double totalKcal, Double totalMoisture, Double totalProtein, Double totalFats) {
+
+        ContentValues values = new ContentValues();
+
+        values.put("petID", petID);
+        values.put("wDate", date);
+        values.put("wTime", time);
+        values.put("wDescription", description);
+        values.put("wItemType", itemType);
+
+        values.put("kcalCount", kcalCount != null ? kcalCount : 0.0);
+        values.put("moistureAmt", moistureAmt != null ? moistureAmt : 0.0);
+        values.put("proteinAmt", proteinAmt != null ? proteinAmt : 0.0);
+        values.put("fatsAmt", fatsAmt != null ? fatsAmt : 0.0);
+
+        values.put("totalKcal", totalKcal != null ? totalKcal : 0.0);
+        values.put("totalMoisture", totalMoisture != null ? totalMoisture : 0.0);
+        values.put("totalProtein", totalProtein != null ? totalProtein : 0.0);
+        values.put("totalFats", totalFats != null ? totalFats : 0.0);
+
+        return values;
     }
 }

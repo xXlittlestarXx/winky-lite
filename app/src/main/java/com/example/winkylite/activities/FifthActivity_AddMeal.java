@@ -86,7 +86,15 @@ public class FifthActivity_AddMeal extends AppCompatActivity implements AdapterV
     private void saveMeal() {
         mealItemList.clear();
 
-        View itemView = nutritionInputsContainer.getChildAt(i);
+        String itemType;
+        double totalKcal, totalMoisture, totalProtein, totalFats;
+
+        totalKcal = 0;
+        totalMoisture = 0;
+        totalFats = 0;
+        totalProtein = 0;
+
+        View itemView = nutritionInputsContainer.getChildAt(0);
 
         EditText etKcal = itemView.findViewById(R.id.etKcal);
         EditText etMoisture = itemView.findViewById(R.id.etMoisture);
@@ -98,17 +106,24 @@ public class FifthActivity_AddMeal extends AppCompatActivity implements AdapterV
         double fats = parseDouble(etFats);
         double protein = parseDouble(etProtein);
 
-        double[] totals = mealCalculator.calculateMeal(mealItemList);
+        Spinner spinner = itemView.findViewById(R.id.itemDropDownBox);
+        itemType = spinner.getSelectedItem().toString();
+        //double[] totals = mealCalculator.calculateMeal(mealItemList);
 
         dbhandler.addMeal(
                 currentPetID,
                 etDate.getText().toString(),
                 etTime.getText().toString(),
                 etDescription.getText().toString(),
-                totals[0], // kcal
-                totals[1], // moisture
-                totals[2], // fats
-                totals[3]  // protein
+                itemType,
+                kcal,
+                moisture,
+                protein,
+                fats,
+                totalKcal,
+                totalMoisture,
+                totalProtein,
+                totalFats
         );
     }
 
