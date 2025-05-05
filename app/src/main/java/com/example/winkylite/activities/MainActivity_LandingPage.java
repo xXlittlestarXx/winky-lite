@@ -31,24 +31,13 @@ public class MainActivity_LandingPage extends AppCompatActivity {
             startActivity(intent);
         });
 
-        dbHelper = new DBHandler(this);
-
-
-        new Thread(() -> {
-            try {
-                dbHelper.createDatabase();
-                dbHelper.openDatabase();
-
-                insertTestUser();
-
-            } catch (IOException e) {
-                runOnUiThread(() ->
-                        Toast.makeText(this, "Database Error: " + e.getMessage(),
-                                Toast.LENGTH_LONG).show());
-                Log.e("Database", "Initilization error", e);
-            }
-            ;
-        }).start();
+        DBHandler dbHelper = new DBHandler(this);
+        try {
+            dbHelper.createDatabase();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        dbHelper.openDatabase();
     }
 
     @Override

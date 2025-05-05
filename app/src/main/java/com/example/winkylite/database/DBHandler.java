@@ -73,13 +73,6 @@ public class DBHandler extends SQLiteOpenHelper {
                         SQLiteDatabase.OPEN_READWRITE);
     }
 
-    @Override
-    public synchronized void close () {
-        if (myDataBase != null) {
-            myDataBase.close();
-        }
-        super.close();
-    }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -206,11 +199,11 @@ public class DBHandler extends SQLiteOpenHelper {
             openDatabase();
         }
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT m.mealID, m.wDate, m.wTime, m.wDescription, COUNT(mi.itemType) as itemCount " +
+        String query = "SELECT m.wMealID AS mealID, m.wDate, m.wTime, m.wDescription, m.totalKcal, m.totalMoisture, m.totalProtein, m.totalFats, COUNT(mi.itemType) as itemCount " +
                 "FROM Meals m " +
-                "LEFT JOIN MealItems mi ON m.mealID = mi.mealID " +
+                "LEFT JOIN MealItems mi ON m.wMealID = mi.mealID " +
                 "WHERE m.petID = ? " +
-                "GROUP BY m.mealID " +
+                "GROUP BY m.wMealID " +
                 "ORDER BY m.wDate DESC, m.wTime DESC LIMIT 30";
 
         return db.rawQuery(query, new String[]{String.valueOf(petID)});
@@ -223,5 +216,13 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String query = "SELECT * FROM MealItems WHERE mealID = ?";
         return myDataBase.rawQuery(query, new String[]{String.valueOf(mealID)});
+    }
+
+    @Override
+    public synchronized void close () {
+        if (myDataBase != null) {
+            myDataBase.close();
+        }
+        super.close();
     }
 }

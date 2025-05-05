@@ -54,7 +54,7 @@ public class Meals {
                 return false;
             }
         }
-
+        db_helper.close();
         return true;
     }
 
