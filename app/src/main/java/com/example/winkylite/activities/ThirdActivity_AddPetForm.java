@@ -8,6 +8,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -77,33 +78,39 @@ public class ThirdActivity_AddPetForm extends AppCompatActivity {
         });
 
         submitButton.setOnClickListener(v->{
-            String name = petName.getText().toString();
-            int age = Integer.parseInt(petAge.getText().toString());
-            String ageUnit = ageMonths.isChecked() ? "months" : "years";
-            String type = typeDog.isChecked() ? "Dog" : "Cat";
-            String gender = genderMale.isChecked() ? "Male" : "Female";
-            boolean isFixed = fixedYes.isChecked();
+                String name = petName.getText().toString();
+                int age = Integer.parseInt(petAge.getText().toString());
+                String ageUnit = ageMonths.isChecked() ? "months" : "years";
+                String type = typeDog.isChecked() ? "Dog" : "Cat";
+                String gender = genderMale.isChecked() ? "Male" : "Female";
+                boolean isFixed = fixedYes.isChecked();
 
-            double currentWeight = Double.parseDouble(petCWeight.getText().toString());
+                double currentWeight = Double.parseDouble(petCWeight.getText().toString());
 
-            boolean hasGoalWeight = setGoalWeight.isChecked();
-            double goalWeight = hasGoalWeight ?
-                    Double.parseDouble(petGWeight.getText().toString()) : 0.0;
+                boolean hasGoalWeight = setGoalWeight.isChecked();
+                double goalWeight = hasGoalWeight ?
+                        Double.parseDouble(petGWeight.getText().toString()) : 0.0;
 
-            int activityLevel = petActivityLevel.getProgress();
+                int activityLevel = petActivityLevel.getProgress();
 
-            Pets newPet = new Pets(
+                Pets newPet = new Pets(
 
-                    name, ageUnit, gender, type,
-                    isFixed, hasGoalWeight,
-                    age , activityLevel,
-                    currentWeight, goalWeight
-            );
+                        name, ageUnit, gender, type,
+                        isFixed, hasGoalWeight,
+                        age, activityLevel,
+                        currentWeight, goalWeight
+                );
             newPet.processToCalculator();
-            newPet.saveToDB(ThirdActivity_AddPetForm.this);
-            Intent intent = new Intent(ThirdActivity_AddPetForm.this, SecondActivity_HomePage.class);
-            startActivity(intent);
-            finish();
-                });
+            boolean insertSuccess = newPet.saveToDB(ThirdActivity_AddPetForm.this);
+
+            if (insertSuccess) {
+                Toast.makeText(ThirdActivity_AddPetForm.this, "Pet added successfully!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ThirdActivity_AddPetForm.this, SecondActivity_HomePage.class);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(ThirdActivity_AddPetForm.this, "Failed to save pet to database.", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

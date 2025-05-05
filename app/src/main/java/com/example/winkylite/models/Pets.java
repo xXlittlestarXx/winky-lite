@@ -4,6 +4,9 @@ import android.content.Context;
 
 import com.example.winkylite.calculators.RecCalculator;
 import com.example.winkylite.database.DBHandler;
+
+import java.io.IOException;
+
 public class Pets {
 
     /* VARIABLES */
@@ -99,10 +102,15 @@ public class Pets {
         this.recProtein = calc.getRecProtein();
     }
 
-    public void saveToDB(Context context){
+    public boolean saveToDB(Context context){
         DBHandler db_helper = new DBHandler(context);
-        db_helper.insertPet(this);
-
+        try {
+            db_helper.createDatabase();
+        } catch (IOException e){
+            return false;
+        }
+        db_helper.openDatabase();
+        return db_helper.insertPet(this);
     }
 
 }

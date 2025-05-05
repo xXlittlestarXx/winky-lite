@@ -80,41 +80,19 @@
             android:ems="10"
             android:hint="ex: Breakfast before morning walk"/>
 
-        <Spinner
-            android:id="@+id/itemDropDownBox"
+        <LinearLayout
+            android:id="@+id/itemContainer"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"/>
 
-        <EditText
-            android:id="@+id/etKcal"
+        <Button
+            android:id="@+id/btnAddItem"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Calories (kcal)"
-            android:ems="10"
-            android:inputType="number"/>
-
-        <EditText
-            android:id="@+id/etMoisture"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Moisture Content (%)"
-            android:inputType="numberDecimal"/>
-
-        <EditText
-            android:id="@+id/etFats"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Fats (%)"
-            android:inputType="numberDecimal" />
-
-        <EditText
-            android:id="@+id/etProtein"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Protein (%)"
-            android:inputType="numberDecimal"/>
+            android:layout_height="wrap_content"
+            android:text="Add Item"
+            android:layout_marginTop="10dp" />
 
         <Button
             android:id="@+id/btnSave"

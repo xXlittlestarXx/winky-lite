@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.winkylite.models.Meals;
 import com.example.winkylite.models.Pets;
+import com.example.winkylite.models.mealItem;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,8 +18,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class DBHandler extends SQLiteOpenHelper {
-    private static final String DB_NAME = "myDBupdated.db";
-    private static final int DB_VERSION = 3;
+    private static final String DB_NAME = "WinkyDB_Version5.db";
+    private static final int DB_VERSION = 4;
     private final Context context;
     private String DB_PATH;
     private SQLiteDatabase myDataBase;
@@ -94,7 +95,7 @@ public class DBHandler extends SQLiteOpenHelper {
         return myDataBase.rawQuery(query, null);
     }
 
-    public void insertPet (Pets Pets){
+    public boolean insertPet (Pets Pets){
 
         SQLiteDatabase db = SQLiteDatabase.openDatabase
                 (DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
@@ -116,15 +117,20 @@ public class DBHandler extends SQLiteOpenHelper {
                 values.put("wPetActivity", (double) Pets.getPetActivityLevel());
 
                 values.put("wPetCurrentWeight", Pets.getPetCurrentWeight());
-                values.put("wPetGoalWeight", Pets.getHasGoalWeight() ? Pets.getPetGoalWeight() : null);
+
+                if (Pets.getHasGoalWeight()) {
+                    values.put("wPetGoalWeight", Pets.getPetGoalWeight());
+                } else {
+                    values.putNull("wPetGoalWeight");
+                }
 
                 values.put("wPetKcalGoal", Pets.getRecKcal());
                 values.put("wPetProteinGoal", Pets.getRecProtein());
                 values.put("wPetFatsGoal", Pets.getRecFats());
                 values.put("wPetMoistureGoal", 75);
 
-                db.insert("Pets", null, values);
-
+        long result = db.insert("Pets", null, values);
+        return result != -1;
                 //db.close();
 
     }
@@ -159,33 +165,33 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public void insertMeal(Meals Meals){
+    public long insertMeal(Meals Meals){
 
-        SQLiteDatabase db = SQLiteDatabase.openDatabase
-                (DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
-
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-
         values.put("petID", Meals.getPetID());
+        values.put("date", Meals.getDate());
+        values.put("time", Meals.getTime());
+        values.put("description", Meals.getDescription());
 
-        values.put("wDate", Meals.getDate());
-        values.put("wTime", Meals.getTime());
-        values.put("wDescription", Meals.getDescription());
-        values.put("wItemType", Meals.getItemType());
-
-        values.put("kcalCount", Meals.getKcal());
-        values.put("moistureAmt", Meals.getMoisture());
-        values.put("proteinAmt", Meals.getProtein());
-        values.put("fatsAmt", Meals.getFats());
-
-        values.put("totalKcal", Meals.getTotalKcal());
-        values.put("totalMoisture", Meals.getTotalMoisture());
-        values.put("totalProtein", Meals.getTotalProtein());
-        values.put("totalFats", Meals.getTotalFats());
-
-        db.insert("Meals", null, values);
-
+        long mealID = db.insert("Meals", null, values);
+        return mealID;
         //db.close();
 
+    }
+
+    public boolean insertMealItem(int mealID, mealItem item) {
+        SQLiteDatabase db = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
+        ContentValues values = new ContentValues();
+
+        values.put("mealID", mealID);
+        values.put("itemType", item.getType());
+        values.put("kcalCount", item.getKcal());
+        values.put("moistureAmt", item.getMoisture());
+        values.put("proteinAmt", item.getProtein());
+        values.put("fatsAmt", item.getFats());
+
+        long result = db.insert("MealItems", null, values);
+        return result != -1;
     }
 }

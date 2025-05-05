@@ -6,26 +6,34 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.LinearLayout;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.winkylite.R;
+import com.example.winkylite.calculators.mealCalculator;
 import com.example.winkylite.models.Meals;
-//import com.example.winkylite.database.DBHandler;
+import com.example.winkylite.models.mealItem;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class FifthActivity_AddMeal extends AppCompatActivity{
-    private EditText etDate, etTime, etDescription, etKcal, etMoisture,
-                        etFats, etProtein;
-    private Button btnBack, btnSave;
-    private Spinner itemDropDownBox;
-    //private DBHandler dbhandler;
+
+    private LinearLayout itemContainer;
+    private EditText etDate, etTime, etDescription;
+    private Button btnBack, btnSave, btnAddItem;
+    private LayoutInflater inflater;
+    private int itemCount = 0;
+    private final int MAX_ITEMS = 5;
     private int currentPetID;
 
     @Override
@@ -35,67 +43,94 @@ public class FifthActivity_AddMeal extends AppCompatActivity{
 
         currentPetID = getIntent().getIntExtra("SELECTED_PET_ID", -1);
 
+        itemContainer = findViewById(R.id.itemContainer);
+
         etDate = findViewById(R.id.etDate);
         etTime = findViewById(R.id.etTime);
         etDescription = findViewById(R.id.etDescription);
 
-        itemDropDownBox = findViewById(R.id.itemDropDownBox);
-
-        etKcal = findViewById(R.id.etKcal);
-        etMoisture = findViewById(R.id.etMoisture);
-        etFats = findViewById(R.id.etFats);
-        etProtein = findViewById(R.id.etProtein);
-
         btnBack = findViewById(R.id.btnBack);
         btnSave = findViewById(R.id.btnSave);
+        btnAddItem = findViewById(R.id.btnAddItem);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.food_types, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        itemDropDownBox.setAdapter(adapter);
+        inflater = LayoutInflater.from(this);
 
         btnBack.setOnClickListener(v -> {
             Intent intent = new Intent(FifthActivity_AddMeal.this, FourthActivity_PetDetails.class);
-
             startActivity(intent);
         });
 
         etDate.setOnClickListener(v -> showDatePicker());
         etTime.setOnClickListener(v -> showTimePicker());
 
+        btnAddItem.setOnClickListener(v -> {
+            if (itemCount >= MAX_ITEMS) {
+                Toast.makeText(this, "Maximum 5 items allowed", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            View itemView = inflater.inflate(R.layout.meal_item_template, itemContainer, false);
+            setupSpinner(itemView);
+            itemContainer.addView(itemView);
+            itemCount++;
+        });
+
         btnSave.setOnClickListener(v -> {
-            String itemType = itemDropDownBox.getSelectedItem().toString();
 
-            double kcal = parseDouble(etKcal);
-            double moisture = parseDouble(etMoisture);
-            double fats = parseDouble(etFats);
-            double protein = parseDouble(etProtein);
+            if (itemContainer.getChildCount() == 0) {
+                Toast.makeText(this, "Add at least one item", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            double totalKcal = kcal;
-            double totalMoisture = moisture;
-            double totalProtein = protein;
-            double totalFats = fats;
+            List<mealItem> mealItems = new ArrayList<>();
+            List<String> foodTypes = new ArrayList<>();
 
-            Meals newMeal = new Meals(
+            for (int i = 0; i < itemContainer.getChildCount(); i++) {
+                View itemView = itemContainer.getChildAt(i);
+                Spinner spinner = itemView.findViewById(R.id.itemDropDownBox);
+                EditText etKcal = itemView.findViewById(R.id.etKcal);
+                EditText etMoisture = itemView.findViewById(R.id.etMoisture);
+                EditText etFats = itemView.findViewById(R.id.etFats);
+                EditText etProtein = itemView.findViewById(R.id.etProtein);
+
+                String type = spinner.getSelectedItem().toString();
+                double kcal = parseDouble(etKcal);
+                double moisture = parseDouble(etMoisture);
+                double fats = parseDouble(etFats);
+                double protein = parseDouble(etProtein);
+
+                mealItems.add(new mealItem(type, kcal, moisture, fats, protein));
+            }
+
+            double[] averages = mealCalculator.calculateMeal(mealItems);
+
+            Meals meal = new Meals(
                     currentPetID,
                     etDate.getText().toString(),
                     etTime.getText().toString(),
                     etDescription.getText().toString(),
-                    itemType,
-                    kcal,
-                    moisture,
-                    protein,
-                    fats,
-                    totalKcal,
-                    totalMoisture,
-                    totalProtein,
-                    totalFats
+                    mealItems
             );
 
-            newMeal.saveToDB(FifthActivity_AddMeal.this);
+            boolean success = meal.saveToDB(this);
 
+            if (success) {
+                Toast.makeText(this, "Added to database successfully", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(this, "Error adding to database", Toast.LENGTH_SHORT).show();
+            }
         });
+    }
 
+    private void setupSpinner(View itemView) {
+        Spinner spinner = itemView.findViewById(R.id.itemDropDownBox);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.food_types,
+                android.R.layout.simple_spinner_item
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
     }
 
     private void showTimePicker() {
