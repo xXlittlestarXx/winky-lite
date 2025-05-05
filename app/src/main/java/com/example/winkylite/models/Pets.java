@@ -47,6 +47,10 @@ public class Pets {
 
     }
 
+    public Pets() {
+
+    }
+
 
     /* GETTERS */
 

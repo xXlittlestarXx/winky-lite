@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import com.bumptech.glide.Glide;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -61,6 +62,11 @@ public class SeventhActivity_ViewCharts extends AppCompatActivity {
     private void loadCharts(DBHandler db) {
         List<Meals> meals = getMealsFromDB(db);
         Pets pet = db.getPetDetails(currentPetId);
+
+        if (pet == null) {
+            Log.e("SeventhActivity", "Pet with ID " + currentPetId + " not found.");
+            return;
+        }
         Map<String, DailyAverage> averages = chartCalculator.calculateDailyAverages(meals);
 
         List<Double> kcalValues = getOrderedValues(averages, "kcal");

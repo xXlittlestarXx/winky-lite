@@ -5,9 +5,11 @@ import android.content.Context;
 import com.example.winkylite.calculators.mealCalculator;
 import com.example.winkylite.database.DBHandler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Meals {
+    private int mealID;
     private int petID;
     private String date, time,  description;
     private List<mealItem> mealItems;
@@ -16,6 +18,7 @@ public class Meals {
     //private List<MealItem> mealItems; */
 
     private double totalKcal, totalProtein, totalFats, totalMoisture;
+    double avgKcal, avgFat, avgProtein, avgMoisture;
 
     public Meals(int petID, String date, String time, String description, List<mealItem> mealItems) {
         this.petID = petID;
@@ -40,6 +43,19 @@ public class Meals {
     public double getTotalProtein() { return totalProtein; }
     public double getTotalFats() { return totalFats; }
     public double getTotalMoisture() { return totalMoisture; }
+
+    public Meals(int mealID, int petID, String date, String time, double avgKcal, double avgFat, double avgProtein, double avgMoisture) {
+        this.mealID = mealID;
+        this.petID = petID;
+        this.date = date;
+        this.time = time;
+        this.avgKcal = avgKcal;
+        this.avgFat = avgFat;
+        this.avgProtein = avgProtein;
+        this.avgMoisture = avgMoisture;
+        this.mealItems = new ArrayList<>(); // empty by default
+    }
+
 
     public boolean saveToDB(Context context){
         DBHandler db_helper = new DBHandler(context);

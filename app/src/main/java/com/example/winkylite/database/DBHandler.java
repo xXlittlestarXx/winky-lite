@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.winkylite.models.Meals;
 import com.example.winkylite.models.Pets;
@@ -16,6 +17,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBHandler extends SQLiteOpenHelper {
     private static final String DB_NAME = "WinkyDB_Version5.db";
@@ -141,6 +144,10 @@ public class DBHandler extends SQLiteOpenHelper {
         return myDataBase.rawQuery(query, null);
     }
     public int getPetIdByName (String petName){
+        if (petName == null || petName.isEmpty()) {
+            Log.e("DBHandler", "Pet name is null or empty!");
+            return -1;
+        }
         if (myDataBase == null || !myDataBase.isOpen()) {
             openDatabase();
         }
@@ -201,19 +208,30 @@ public class DBHandler extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    public Cursor getMealsForPet(int petID) {
-        if (myDataBase == null || !myDataBase.isOpen()) {
-            openDatabase();
-        }
-        //SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT m.wMealID AS mealID, m.wDate, m.wTime, m.wDescription, m.totalKcal, m.totalMoisture, m.totalProtein, m.totalFats, COUNT(mi.itemType) as itemCount " +
-                "FROM Meals m " +
-                "LEFT JOIN MealItems mi ON m.wMealID = mi.mealID " +
-                "WHERE m.petID = ? " +
-                "GROUP BY m.wMealID " +
-                "ORDER BY m.wDate DESC, m.wTime DESC LIMIT 30";
+    public List<Meals> getMealsForPet(int petID) {
+        List<Meals> mealsList = new ArrayList<>();
 
-        return myDataBase.rawQuery(query, new String[]{String.valueOf(petID)});
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM meals WHERE petID = ? ORDER BY wDate DESC, wTime DESC",
+                new String[]{String.valueOf(petID)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                int mealId = cursor.getInt(cursor.getColumnIndexOrThrow("wMealID"));
+                String date = cursor.getString(cursor.getColumnIndexOrThrow("wDate"));
+                String time = cursor.getString(cursor.getColumnIndexOrThrow("wTime"));
+                double avgKcal = cursor.getDouble(cursor.getColumnIndexOrThrow("totalKcal"));
+                double avgFat = cursor.getDouble(cursor.getColumnIndexOrThrow("totalFats"));
+                double avgProtein = cursor.getDouble(cursor.getColumnIndexOrThrow("totalProtein"));
+                double avgMoisture = cursor.getDouble(cursor.getColumnIndexOrThrow("totalMoisture"));
+
+                Meals meal = new Meals(mealId, petID, date, time, avgKcal, avgFat, avgProtein, avgMoisture);
+                mealsList.add(meal);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return mealsList;
     }
 
     public Cursor getMealItemsForMeal(int mealID) {
