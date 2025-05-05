@@ -32,5 +32,60 @@
             app:layout_constraintTop_toBottomOf="@+id/backButton"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <ImageView
+            android:id="@+id/kcalChart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="kcalChart"
+            android:paddingTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/title"/>
+
+        <TextView
+            android:id="@+id/kcalStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/kcalChart"/>
+
+        <ImageView
+            android:id="@+id/proteinChart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="proteinChart"
+            android:paddingTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/kcalStatus"/>
+
+        <TextView
+            android:id="@+id/proteinStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/proteinChart"/>
+
+        <ImageView
+            android:id="@+id/fatChart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="fatChart"
+            android:paddingTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/proteinStatus"/>
+
+        <TextView
+            android:id="@+id/fatStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/fatChart"/>
+        <ImageView
+            android:id="@+id/moistureChart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="moistureChart"
+            android:paddingTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/fatStatus"/>
+
+        <TextView
+            android:id="@+id/moistureStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/moistureChart"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

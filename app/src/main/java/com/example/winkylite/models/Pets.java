@@ -19,9 +19,7 @@ public class Pets {
     private double petCurrentWeight, petGoalWeight;
 
     /* FOR CALCULATIONS */
-    private double recProtein;
-    private double recKcal;
-    private double recFats;
+    private double recProtein, recKcal, recFats, recMoisture;
 
     /* CONSTRUCTOR */
     public Pets (String petName, String ageUnit, String petGender, String petType,
@@ -75,7 +73,12 @@ public class Pets {
     public double getRecProtein() {return recProtein;}
     public double getRecKcal() {return recKcal;}
     public double getRecFats() {return recFats;}
+    public double getRecMoisture() { return recMoisture; }
 
+    public void setRecProtein(double val) { this.recProtein = val; }
+    public void setRecKcal(double val) { this.recKcal = val; }
+    public void setRecFats(double val) { this.recFats = val; }
+    public void setRecMoisture(double val) { this.recMoisture = val; }
     public String getPetActivity() {
         switch(activityLevel){
             case 0: return "Low";

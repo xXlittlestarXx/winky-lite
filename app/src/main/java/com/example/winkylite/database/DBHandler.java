@@ -225,6 +225,47 @@ public class DBHandler extends SQLiteOpenHelper {
         return myDataBase.rawQuery(query, new String[]{String.valueOf(mealID)});
     }
 
+    public double[] getPetRecommendations(int petID) {
+        if (myDataBase == null || !myDataBase.isOpen()) {
+            openDatabase();
+        }
+
+        double[] recs = new double[4];
+        Cursor cursor = myDataBase.rawQuery(
+                "SELECT wPetKcalGoal, wPetProteinGoal, wPetFatsGoal, wPetMoistureGoal FROM Pets WHERE wPetID = ?",
+                new String[]{String.valueOf(petID)}
+        );
+
+        if (cursor.moveToFirst()) {
+            recs[0] = cursor.getDouble(0);
+            recs[1] = cursor.getDouble(1);
+            recs[2] = cursor.getDouble(2);
+            recs[3] = cursor.getDouble(3);
+        }
+        cursor.close();
+        return recs;
+    }
+
+    public Pets getPetDetails(int petID) {
+        if (myDataBase == null || !myDataBase.isOpen()) {
+            openDatabase();
+        }
+
+        Cursor cursor = myDataBase.rawQuery("SELECT wPetKcalGoal, wPetProteinGoal, wPetFatsGoal, wPetMoistureGoal FROM Pets WHERE wPetID = ?",
+        new String[]{String.valueOf(petID)});
+
+        Pets pet = null;
+            if (cursor.moveToFirst()) {
+                pet = new Pets();
+                pet.setRecKcal(cursor.getDouble(0));
+                pet.setRecProtein(cursor.getDouble(1));
+                pet.setRecFats(cursor.getDouble(2));
+                pet.setRecMoisture(cursor.getDouble(3));
+            }
+        cursor.close();
+        return pet;
+    }
+
     @Override
     public synchronized void close () {
         if (myDataBase != null) {
@@ -232,4 +273,6 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         super.close();
     }
+
+
 }
