@@ -4,5 +4,9 @@
         <item>dry</item>
         <item>wet</item>
         <item>frozen</item>
+        <item>topper</item>
+        <item>supplement</item>
+        <item>treat</item>
+        <item>other</item>
     </string-array>
 </resources>

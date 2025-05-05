@@ -200,4 +200,28 @@ public class DBHandler extends SQLiteOpenHelper {
         long result = db.insert("MealItems", null, values);
         return result != -1;
     }
+
+    public Cursor getMealsForPet(int petID) {
+        if (myDataBase == null || !myDataBase.isOpen()) {
+            openDatabase();
+        }
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT m.mealID, m.wDate, m.wTime, m.wDescription, COUNT(mi.itemType) as itemCount " +
+                "FROM Meals m " +
+                "LEFT JOIN MealItems mi ON m.mealID = mi.mealID " +
+                "WHERE m.petID = ? " +
+                "GROUP BY m.mealID " +
+                "ORDER BY m.wDate DESC, m.wTime DESC LIMIT 30";
+
+        return db.rawQuery(query, new String[]{String.valueOf(petID)});
+    }
+
+    public Cursor getMealItemsForMeal(int mealID) {
+        if (myDataBase == null || !myDataBase.isOpen()) {
+            openDatabase();
+        }
+
+        String query = "SELECT * FROM MealItems WHERE mealID = ?";
+        return myDataBase.rawQuery(query, new String[]{String.valueOf(mealID)});
+    }
 }
