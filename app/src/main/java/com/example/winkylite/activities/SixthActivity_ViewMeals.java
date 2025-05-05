@@ -2,6 +2,7 @@ package com.example.winkylite.activities;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -59,30 +60,30 @@ public class SixthActivity_ViewMeals extends AppCompatActivity {
                 double totalProtein = cursor.getDouble(cursor.getColumnIndexOrThrow("totalProtein"));
                 double totalFats = cursor.getDouble(cursor.getColumnIndexOrThrow("totalFats"));
 
-                LinearLayout mealItemLayout = (LinearLayout) inflater.inflate(R.layout.meal_view_template, mealsLayout, false);
+                View mealView = inflater.inflate(R.layout.meal_view_template, mealsLayout, false);
 
-                TextView mealDateTV = mealItemLayout.findViewById(R.id.mealDate);
+                TextView mealDateTV = mealView.findViewById(R.id.mealDate);
                 mealDateTV.setText("Date: " + mealDate);
 
-                TextView mealTimeTV = mealItemLayout.findViewById(R.id.mealTime);
+                TextView mealTimeTV = mealView.findViewById(R.id.mealTime);
                 mealTimeTV.setText("Time: " + mealTime);
 
-                TextView mealDescTV = mealItemLayout.findViewById(R.id.mealDescription);
+                TextView mealDescTV = mealView.findViewById(R.id.mealDescription);
                 mealDescTV.setText("Description: " + (mealDescription != null ? mealDescription : ""));
 
-                TextView totalKcalTV = mealItemLayout.findViewById(R.id.mealTotalKcal);
+                TextView totalKcalTV = mealView.findViewById(R.id.mealTotalKcal);
                 totalKcalTV.setText(String.format("Kcal Total: %.2f", totalKcal));
 
-                TextView totalMoistureTV = mealItemLayout.findViewById(R.id.mealTotalMoisture);
+                TextView totalMoistureTV = mealView.findViewById(R.id.mealTotalMoisture);
                 totalMoistureTV.setText(String.format("Moisture Total: %.2f", totalMoisture));
 
-                TextView totalProteinTV = mealItemLayout.findViewById(R.id.mealTotalProtein);
+                TextView totalProteinTV = mealView.findViewById(R.id.mealTotalProtein);
                 totalProteinTV.setText(String.format("Protein Total: %.2f", totalProtein));
 
-                TextView totalFatsTV = mealItemLayout.findViewById(R.id.mealTotalFats);
+                TextView totalFatsTV = mealView.findViewById(R.id.mealTotalFats);
                 totalFatsTV.setText(String.format("Fats Total: %.2f", totalFats));
 
-                LinearLayout itemsLayout = mealItemLayout.findViewById(R.id.itemsLayout);
+                LinearLayout itemsLayout = mealView.findViewById(R.id.itemsLayout);
                 Cursor itemsCursor = dbHelper.getMealItemsForMeal(mealID);
 
                 if (itemsCursor != null && itemsCursor.moveToFirst()) {
@@ -115,7 +116,7 @@ public class SixthActivity_ViewMeals extends AppCompatActivity {
 
                 }
 
-                mealsLayout.addView(mealItemLayout);
+                mealsLayout.addView(mealView);
 
             } while (cursor.moveToNext());
 

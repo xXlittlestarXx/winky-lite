@@ -93,6 +93,10 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = SQLiteDatabase.openDatabase
                 (DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
 
+                if (myDataBase == null || !myDataBase.isOpen()){
+                    openDatabase();
+                }
+
                 ContentValues values = new ContentValues();
 
                 values.put("userID", 1);
@@ -122,7 +126,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 values.put("wPetFatsGoal", Pets.getRecFats());
                 values.put("wPetMoistureGoal", 75);
 
-        long result = db.insert("Pets", null, values);
+        long result = myDataBase.insert("Pets", null, values);
         return result != -1;
                 //db.close();
 
@@ -159,9 +163,12 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     public long insertMeal(Meals Meals){
-
+        if (myDataBase == null || !myDataBase.isOpen()){
+            openDatabase();
+        }
         String wPetFixed = "bug";
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase(); */
+
         ContentValues values = new ContentValues();
         values.put("petID", Meals.getPetID());
         values.put("wDate", Meals.getDate());
@@ -173,17 +180,17 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put("totalFats", Meals.getTotalFats());
         values.put("wPetFixed", wPetFixed);
 
-        long mealID = db.insert("Meals", null, values);
-        return mealID;
+        long wMealID = myDataBase.insert("Meals", null, values);
+        return wMealID;
         //db.close();
 
     }
 
-    public boolean insertMealItem(int mealID, mealItem item) {
+    public boolean insertMealItem(int wMealID, mealItem item) {
         SQLiteDatabase db = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
         ContentValues values = new ContentValues();
 
-        values.put("mealID", mealID);
+        values.put("mealID", wMealID);
         values.put("itemType", item.getType());
         values.put("kcalCount", item.getKcal());
         values.put("moistureAmt", item.getMoisture());
@@ -198,7 +205,7 @@ public class DBHandler extends SQLiteOpenHelper {
         if (myDataBase == null || !myDataBase.isOpen()) {
             openDatabase();
         }
-        SQLiteDatabase db = this.getReadableDatabase();
+        //SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT m.wMealID AS mealID, m.wDate, m.wTime, m.wDescription, m.totalKcal, m.totalMoisture, m.totalProtein, m.totalFats, COUNT(mi.itemType) as itemCount " +
                 "FROM Meals m " +
                 "LEFT JOIN MealItems mi ON m.wMealID = mi.mealID " +
@@ -206,7 +213,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 "GROUP BY m.wMealID " +
                 "ORDER BY m.wDate DESC, m.wTime DESC LIMIT 30";
 
-        return db.rawQuery(query, new String[]{String.valueOf(petID)});
+        return myDataBase.rawQuery(query, new String[]{String.valueOf(petID)});
     }
 
     public Cursor getMealItemsForMeal(int mealID) {
