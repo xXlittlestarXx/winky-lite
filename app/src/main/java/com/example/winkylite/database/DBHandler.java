@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.winkylite.models.Meals;
 import com.example.winkylite.models.Pets;
 
 import java.io.File;
@@ -34,22 +35,8 @@ public class DBHandler extends SQLiteOpenHelper {
         if (!dbExist) {
             File dbFile = new File(DB_PATH);
             dbFile.getParentFile().mkdirs();
-            try {
-                copyDatabase();
-            } catch (IOException e) {
-                throw new Error("Error copying database");
-            }
-        } else {
-            int currentVersion = getDatabaseVersion();
-            if (currentVersion < DB_VERSION) {
-                updateDatabase();
-            }
+            copyDatabase();
         }
-    }
-
-    private void updateDatabase() {
-        SQLiteDatabase db = getWritableDatabase();
-        dbUpdater.update(db, getDatabaseVersion(),DB_VERSION);
     }
 
     private boolean checkDatabase () {
@@ -79,23 +66,7 @@ public class DBHandler extends SQLiteOpenHelper {
         output.flush();
         output.close();
         input.close();
-        updateDatabaseVersion(DB_VERSION);
     }
-    private int getDatabaseVersion(){
-        int version = 0;
-        try {
-            SQLiteDatabase db = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READONLY);
-            version = db.getVersion();
-            db.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return version;
-    }
-    private void updateDatabaseVersion(int dbVersion) {
-        SQLiteDatabase db = getWritableDatabase();
-    }
-
     public void openDatabase () throws SQLException {
         myDataBase = SQLiteDatabase.openDatabase(DB_PATH, null,
                         SQLiteDatabase.OPEN_READWRITE);
@@ -110,15 +81,13 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate (SQLiteDatabase db){
+    public void onCreate(SQLiteDatabase db) {
 
     }
 
     @Override
-    public void onUpgrade (SQLiteDatabase db,int oldVersion, int newVersion){
-        if (oldVersion < newVersion) {
-            dbUpdater.update(db, oldVersion, newVersion);
-        }
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
     }
 
     public Cursor queryData (String query){
@@ -133,16 +102,22 @@ public class DBHandler extends SQLiteOpenHelper {
                 ContentValues values = new ContentValues();
 
                 values.put("userID", 1);
+
                 values.put("wPetName", Pets.getPetName());
                 values.put("wPetType", Pets.getPetType());
+
                 values.put("wPetAge", Pets.getPetAge());
                 values.put("wPetAgeMY", Pets.getAgeUnit());
+
                 values.put("wPetGender", Pets.getPetGender());
                 values.put("wPetFixed", Pets.getIsFixed() ? "Yes" : "No");
+
                 values.put("wPetActivityLvl", Pets.getPetActivity());
                 values.put("wPetActivity", (double) Pets.getPetActivityLevel());
+
                 values.put("wPetCurrentWeight", Pets.getPetCurrentWeight());
                 values.put("wPetGoalWeight", Pets.getHasGoalWeight() ? Pets.getPetGoalWeight() : null);
+
                 values.put("wPetKcalGoal", Pets.getRecKcal());
                 values.put("wPetProteinGoal", Pets.getRecProtein());
                 values.put("wPetFatsGoal", Pets.getRecFats());
@@ -150,7 +125,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
                 db.insert("Pets", null, values);
 
-                db.close();
+                //db.close();
 
     }
 
@@ -184,47 +159,33 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public long addMeal (int petID, String date, String time, String description,
-                         String itemType,
-                         Double kcalCount, Double moistureAmt, Double proteinAmt, Double fatsAmt,
-                         Double totalKcal, Double totalMoisture, Double totalProtein, Double totalFats){
-        SQLiteDatabase db = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
+    public void insertMeal(Meals Meals){
 
-        ContentValues values = prepareMealContentValues(
-                petID, date, time, description, itemType,
-                kcalCount, moistureAmt, proteinAmt, fatsAmt,
-                totalKcal, totalMoisture, totalProtein, totalFats
-        );
-
-        long result = db.insert("Meals", null, values);
-
-        db.close();
-
-        return result;
-    }
-    private ContentValues prepareMealContentValues(
-            int petID, String date, String time, String description, String itemType,
-            Double kcalCount, Double moistureAmt, Double proteinAmt, Double fatsAmt,
-            Double totalKcal, Double totalMoisture, Double totalProtein, Double totalFats) {
+        SQLiteDatabase db = SQLiteDatabase.openDatabase
+                (DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
 
         ContentValues values = new ContentValues();
 
-        values.put("petID", petID);
-        values.put("wDate", date);
-        values.put("wTime", time);
-        values.put("wDescription", description);
-        values.put("wItemType", itemType);
+        values.put("petID", Meals.getPetID());
 
-        values.put("kcalCount", kcalCount != null ? kcalCount : 0.0);
-        values.put("moistureAmt", moistureAmt != null ? moistureAmt : 0.0);
-        values.put("proteinAmt", proteinAmt != null ? proteinAmt : 0.0);
-        values.put("fatsAmt", fatsAmt != null ? fatsAmt : 0.0);
+        values.put("wDate", Meals.getDate());
+        values.put("wTime", Meals.getTime());
+        values.put("wDescription", Meals.getDescription());
+        values.put("wItemType", Meals.getItemType());
 
-        values.put("totalKcal", totalKcal != null ? totalKcal : 0.0);
-        values.put("totalMoisture", totalMoisture != null ? totalMoisture : 0.0);
-        values.put("totalProtein", totalProtein != null ? totalProtein : 0.0);
-        values.put("totalFats", totalFats != null ? totalFats : 0.0);
+        values.put("kcalCount", Meals.getKcal());
+        values.put("moistureAmt", Meals.getMoisture());
+        values.put("proteinAmt", Meals.getProtein());
+        values.put("fatsAmt", Meals.getFats());
 
-        return values;
+        values.put("totalKcal", Meals.getTotalKcal());
+        values.put("totalMoisture", Meals.getTotalMoisture());
+        values.put("totalProtein", Meals.getTotalProtein());
+        values.put("totalFats", Meals.getTotalFats());
+
+        db.insert("Meals", null, values);
+
+        //db.close();
+
     }
 }

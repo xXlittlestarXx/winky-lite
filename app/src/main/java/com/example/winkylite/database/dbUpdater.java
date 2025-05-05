@@ -1,4 +1,4 @@
-package com.example.winkylite.database;
+/* package com.example.winkylite.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -131,3 +131,4 @@ public class dbUpdater {
                 ).getVersion() : 0;
     }
 }
+*/

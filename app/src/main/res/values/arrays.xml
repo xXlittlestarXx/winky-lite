@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="item_types">
-        <item>kibble</item>
+    <string-array name="food_types">
+        <item>dry</item>
         <item>wet</item>
         <item>frozen</item>
-        <item>topper</item>
-        <item>treat</item>
-        <item>supplement</item>
-        <item>other</item>
     </string-array>
 </resources>
