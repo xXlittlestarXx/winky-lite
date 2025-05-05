@@ -167,12 +167,18 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public long insertMeal(Meals Meals){
 
+        String wPetFixed = "bug";
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("petID", Meals.getPetID());
-        values.put("date", Meals.getDate());
-        values.put("time", Meals.getTime());
-        values.put("description", Meals.getDescription());
+        values.put("wDate", Meals.getDate());
+        values.put("wTime", Meals.getTime());
+        values.put("wDescription", Meals.getDescription());
+        values.put("totalKcal", Meals.getTotalKcal());
+        values.put("totalMoisture", Meals.getTotalMoisture());
+        values.put("totalProtein", Meals.getTotalProtein());
+        values.put("totalFats", Meals.getTotalFats());
+        values.put("wPetFixed", wPetFixed);
 
         long mealID = db.insert("Meals", null, values);
         return mealID;
