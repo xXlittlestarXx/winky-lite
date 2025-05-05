@@ -34,6 +34,13 @@ public class SeventhActivity_ViewCharts extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seventh);
 
+        currentPetId = getIntent().getIntExtra("SELECTED_PET_ID", -1);
+        if (currentPetId == -1) {
+            Log.e("SeventhActivity", "Invalid Pet ID passed. Returning to main.");
+            finish();  // Or redirect back
+            return;
+        }
+
         kcalChart = findViewById(R.id.kcalChart);
         kcalStatus = findViewById(R.id.kcalStatus);
 
@@ -54,7 +61,7 @@ public class SeventhActivity_ViewCharts extends AppCompatActivity {
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v->{
             Intent intent = new Intent(SeventhActivity_ViewCharts.this, FourthActivity_PetDetails.class);
-
+            intent.putExtra("SELECTED_PET_ID", currentPetId);
             startActivity(intent);
         });
     }

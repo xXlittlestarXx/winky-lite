@@ -40,7 +40,7 @@ public class SixthActivity_ViewMeals extends AppCompatActivity {
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> {
             Intent intent = new Intent(SixthActivity_ViewMeals.this, FourthActivity_PetDetails.class);
-
+            intent.putExtra("SELECTED_PET_ID", currentPetID);
             startActivity(intent);
         });
 

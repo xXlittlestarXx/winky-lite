@@ -130,8 +130,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 values.put("wPetMoistureGoal", 75);
 
         long result = myDataBase.insert("Pets", null, values);
+        myDataBase.close();
         return result != -1;
-                //db.close();
 
     }
 
@@ -188,9 +188,8 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put("wPetFixed", wPetFixed);
 
         long wMealID = myDataBase.insert("Meals", null, values);
+        myDataBase.close();
         return wMealID;
-        //db.close();
-
     }
 
     public boolean insertMealItem(int wMealID, mealItem item) {

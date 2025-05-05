@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.winkylite.database.DBHandler;
 import com.example.winkylite.R;
@@ -24,6 +26,7 @@ public class EigthActivity_PetProfile extends AppCompatActivity {
             petFixedTextView, petActivityTextView, petWeightTextView, petGoalWeightTextView,
             petKcalTextView, petProteinTextView, petFatsTextView, petMoistureTextView;
 
+    private String currentPetName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,14 +40,24 @@ public class EigthActivity_PetProfile extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        currentPetName = getIntent().getStringExtra("SELECTED_PET_NAME");
+
+        Log.d("EigthActivity", "Received pet name: " + currentPetName);
+
+        if (currentPetName == null) {
+            Toast.makeText(this, "Pet name not provided!", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v->{
             Intent intent = new Intent(EigthActivity_PetProfile.this, FourthActivity_PetDetails.class);
-
+            intent.putExtra("SELECTED_PET_NAME", currentPetName);
             startActivity(intent);
         });
 
-        String currentPetName = getIntent().getStringExtra("SELECTED_PET_NAME");
+        currentPetName = getIntent().getStringExtra("SELECTED_PET_NAME");
         int petId = dbHandler.getPetIdByName(currentPetName);
 
         petNameTextView = findViewById(R.id.nameTextView);
