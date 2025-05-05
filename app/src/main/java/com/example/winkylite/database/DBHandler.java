@@ -90,7 +90,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public boolean insertPet (Pets Pets){
 
-        SQLiteDatabase db = SQLiteDatabase.openDatabase
+        SQLiteDatabase myDataBase = SQLiteDatabase.openDatabase
                 (DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
 
                 if (myDataBase == null || !myDataBase.isOpen()){

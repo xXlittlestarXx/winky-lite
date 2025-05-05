@@ -32,7 +32,7 @@ public class SixthActivity_ViewMeals extends AppCompatActivity {
 
         dbHelper = new DBHandler(this);
         mealsLayout = findViewById(R.id.mealsLayout);
-        currentPetID = getIntent().getIntExtra("petID", -1);
+        currentPetID = getIntent().getIntExtra("SELECTED_PET_ID", -1);
 
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> {
