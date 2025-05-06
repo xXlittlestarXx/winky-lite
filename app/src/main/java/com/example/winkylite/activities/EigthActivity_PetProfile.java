@@ -38,28 +38,83 @@ public class EigthActivity_PetProfile extends AppCompatActivity {
             dbHandler.openDatabase();
         } catch (IOException e) {
             e.printStackTrace();
+            Toast.makeText(this, "Database error", Toast.LENGTH_LONG).show();
+            finish();
+            return;
         }
 
-        currentPetName = getIntent().getStringExtra("SELECTED_PET_NAME");
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+            Toast.makeText(this, "No pet information provided!", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
 
-        Log.d("EigthActivity", "Received pet name: " + currentPetName);
-
-        if (currentPetName == null) {
+        currentPetName = extras.getString("SELECTED_PET_NAME");
+        if (currentPetName == null || currentPetName.isEmpty()) {
             Toast.makeText(this, "Pet name not provided!", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
 
+        initializeViews();
+
+        loadPetData();
+
+        setUpActivityButtons();
+    }
+
+    private void setUpActivityButtons() {
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v->{
             Intent intent = new Intent(EigthActivity_PetProfile.this, FourthActivity_PetDetails.class);
             intent.putExtra("SELECTED_PET_NAME", currentPetName);
             startActivity(intent);
         });
+    }
 
-        currentPetName = getIntent().getStringExtra("SELECTED_PET_NAME");
+    private void loadPetData() {
         int petId = dbHandler.getPetIdByName(currentPetName);
 
+        if (petId == -1) {
+            Toast.makeText(this, "Pet not found in database!", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        Cursor cursor = null;
+        try {
+            cursor = dbHandler.queryData("SELECT * FROM Pets WHERE wPetID = " + petId);
+            if (cursor != null && cursor.moveToFirst()) {
+                petNameTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow("wPetName")));
+                petAgeTextView.setText(cursor.getInt(cursor.getColumnIndexOrThrow("wPetAge")) + " " + cursor.getString(cursor.getColumnIndexOrThrow("wPetAgeMY")));
+                petTypeTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow("wPetType")));
+                petGenderTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow("wPetGender")));
+                petFixedTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow("wPetFixed")));
+                petActivityTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow("wPetActivityLvl")));
+                petWeightTextView.setText(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetCurrentWeight")) + " kg");
+
+                int goalWeightCol = cursor.getColumnIndexOrThrow("wPetGoalWeight");
+                if (cursor.isNull(goalWeightCol)) {
+                    petGoalWeightTextView.setText("Not Set");
+                } else {
+                    double goalWeight = cursor.getDouble(goalWeightCol);
+                    petGoalWeightTextView.setText(goalWeight + " kg");
+                }
+
+                petKcalTextView.setText(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetKcalGoal")) + " kcal");
+                petProteinTextView.setText(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetProteinGoal")) + " g protein");
+                petFatsTextView.setText(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetFatsGoal")) + " g fats");
+                petMoistureTextView.setText(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetMoistureGoal")) + " % moisture");
+
+                //cursor.close();
+            }
+        }finally {
+            if (cursor != null) cursor.close();
+        }
+    }
+
+    private void initializeViews() {
         petNameTextView = findViewById(R.id.nameTextView);
         petAgeTextView = findViewById(R.id.ageTextView);
         petTypeTextView = findViewById(R.id.typeTextView);
@@ -72,31 +127,13 @@ public class EigthActivity_PetProfile extends AppCompatActivity {
         petProteinTextView = findViewById(R.id.proteinGoalTextView);
         petFatsTextView = findViewById(R.id.fatsGoalTextView);
         petMoistureTextView = findViewById(R.id.moistureGoalTextView);
+    }
 
-        Cursor cursor = dbHandler.queryData("SELECT * FROM Pets WHERE wPetID = " + petId);
-        if (cursor != null && cursor.moveToFirst()) {
-            petNameTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow("wPetName")));
-            petAgeTextView.setText(cursor.getInt(cursor.getColumnIndexOrThrow("wPetAge")) + " " + cursor.getString(cursor.getColumnIndexOrThrow("wPetAgeMY")));
-            petTypeTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow("wPetType")));
-            petGenderTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow("wPetGender")));
-            petFixedTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow("wPetFixed")));
-            petActivityTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow("wPetActivityLvl")));
-            petWeightTextView.setText(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetCurrentWeight")) + " kg");
-
-            double goalWeight = cursor.getDouble(cursor.getColumnIndexOrThrow("wPetGoalWeight"));
-            if (cursor.isNull(cursor.getColumnIndexOrThrow("wPetGoalWeight"))) {
-                petGoalWeightTextView.setText("Not Set");
-            } else {
-                petGoalWeightTextView.setText(goalWeight + " kg");
-            }
-
-            petKcalTextView.setText(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetKcalGoal")) + " kcal");
-            petProteinTextView.setText(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetProteinGoal")) + " g protein");
-            petFatsTextView.setText(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetFatsGoal")) + " g fats");
-            petMoistureTextView.setText(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetMoistureGoal")) + " % moisture");
-
-            cursor.close();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (dbHandler != null) {
+            dbHandler.close();
         }
-
     }
 }

@@ -126,6 +126,7 @@ public class SixthActivity_ViewMeals extends AppCompatActivity {
 
             }
         }
+        dbHelper.close();
     }
     private int getItemCountForMeal(int mealID) {
         Cursor cursor = dbHelper.getMealItemsForMeal(mealID);

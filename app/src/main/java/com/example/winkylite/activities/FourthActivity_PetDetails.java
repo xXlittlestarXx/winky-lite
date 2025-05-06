@@ -1,27 +1,17 @@
 package com.example.winkylite.activities;
-
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.SQLException;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.winkylite.database.DBHandler;
 import com.example.winkylite.R;
-
-import java.io.IOException;
-
 
 public class FourthActivity_PetDetails extends AppCompatActivity {
 
     private String petName;
-    private int petID;
+    private int currentPetID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +19,10 @@ public class FourthActivity_PetDetails extends AppCompatActivity {
         setContentView(R.layout.activity_fourth);
 
         petName = getIntent().getStringExtra("SELECTED_PET_NAME");
-        petID = getIntent().getIntExtra("SELECTED_PET_ID", -1);
+        currentPetID = getIntent().getIntExtra("SELECTED_PET_ID", -1);
 
         TextView titlePetName = findViewById(R.id.title);
         titlePetName.setText(petName);
-
-        Button backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(v -> finish());
 
         setupActionButtons();
     }
@@ -50,34 +37,33 @@ public class FourthActivity_PetDetails extends AppCompatActivity {
         profileButton.setOnClickListener(v->{
             Intent intent = new Intent(FourthActivity_PetDetails.this, EigthActivity_PetProfile.class);
             intent.putExtra("SELECTED_PET_NAME", petName);
-            intent.putExtra("SELECTED_PET_ID", petID);
+            intent.putExtra("SELECTED_PET_ID", currentPetID);
             startActivity(intent);
         });
 
         addMealButton.setOnClickListener(v->{
             Intent intent = new Intent(FourthActivity_PetDetails.this, FifthActivity_AddMeal.class);
             intent.putExtra("SELECTED_PET_NAME", petName);
-            intent.putExtra("SELECTED_PET_ID", petID);
+            intent.putExtra("SELECTED_PET_ID", currentPetID);
             startActivity(intent);
         });
 
         viewMealsButton.setOnClickListener(v->{
             Intent intent = new Intent(FourthActivity_PetDetails.this, SixthActivity_ViewMeals.class);
             intent.putExtra("SELECTED_PET_NAME", petName);
-            intent.putExtra("SELECTED_PET_ID", petID);
+            intent.putExtra("SELECTED_PET_ID", currentPetID);
             startActivity(intent);
         });
 
         viewChartsButton.setOnClickListener(v->{
             Intent intent = new Intent(FourthActivity_PetDetails.this, SeventhActivity_ViewCharts.class);
             intent.putExtra("SELECTED_PET_NAME", petName);
-            intent.putExtra("SELECTED_PET_ID", petID);
+            intent.putExtra("SELECTED_PET_ID", currentPetID);
             startActivity(intent);
         });
 
         backButton.setOnClickListener(v->{
             Intent intent = new Intent(FourthActivity_PetDetails.this, SecondActivity_HomePage.class);
-
             startActivity(intent);
         });
     }

@@ -28,16 +28,26 @@ public class SeventhActivity_ViewCharts extends AppCompatActivity {
     private ImageView kcalChart, proteinChart, fatChart, moistureChart;
     private TextView kcalStatus, proteinStatus, fatStatus, moistureStatus;
     private int currentPetId;
+    private String petName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seventh);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+            Log.e("SeventhActivity", "No extras found in intent");
+            finish();
+            return;
+        }
+
+        petName = getIntent().getStringExtra("SELECTED_PET_NAME");
         currentPetId = getIntent().getIntExtra("SELECTED_PET_ID", -1);
+
         if (currentPetId == -1) {
             Log.e("SeventhActivity", "Invalid Pet ID passed. Returning to main.");
-            finish();  // Or redirect back
+            finish();
             return;
         }
 
@@ -61,6 +71,7 @@ public class SeventhActivity_ViewCharts extends AppCompatActivity {
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v->{
             Intent intent = new Intent(SeventhActivity_ViewCharts.this, FourthActivity_PetDetails.class);
+            intent.putExtra("SELECTED_PET_NAME", petName);
             intent.putExtra("SELECTED_PET_ID", currentPetId);
             startActivity(intent);
         });
