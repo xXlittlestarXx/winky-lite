@@ -11,15 +11,13 @@ import java.util.List;
 public class Meals {
     private int mealID;
     private int petID;
-    private String date, time,  description;
+    private String date, time, description;
     private List<mealItem> mealItems;
-    /*private double kcal, moisture, fats, protein, totalKcal,
-            totalMoisture,totalFats, totalProtein;
-    //private List<MealItem> mealItems; */
 
     private double totalKcal, totalProtein, totalFats, totalMoisture;
-    double avgKcal, avgFat, avgProtein, avgMoisture;
+    private double avgKcal, avgFat, avgProtein, avgMoisture;
 
+    // Constructor for creating new Meals with item list (used when adding a meal)
     public Meals(int petID, String date, String time, String description, List<mealItem> mealItems) {
         this.petID = petID;
         this.date = date;
@@ -32,18 +30,14 @@ public class Meals {
         this.totalMoisture = totals[1];
         this.totalFats = totals[2];
         this.totalProtein = totals[3];
+
+        this.avgKcal = totalKcal / mealItems.size();
+        this.avgFat = totalFats / mealItems.size();
+        this.avgProtein = totalProtein / mealItems.size();
+        this.avgMoisture = totalMoisture / mealItems.size();
     }
 
-    public int getPetID() { return petID; }
-    public String getDate() { return date; }
-    public String getTime() { return time; }
-    public String getDescription() { return description; }
-    public List<mealItem> getMealItems() { return mealItems; }
-    public double getTotalKcal() { return totalKcal; }
-    public double getTotalProtein() { return totalProtein; }
-    public double getTotalFats() { return totalFats; }
-    public double getTotalMoisture() { return totalMoisture; }
-
+    // Constructor for loading meals from database
     public Meals(int mealID, int petID, String date, String time, double avgKcal, double avgFat, double avgProtein, double avgMoisture) {
         this.mealID = mealID;
         this.petID = petID;
@@ -53,28 +47,46 @@ public class Meals {
         this.avgFat = avgFat;
         this.avgProtein = avgProtein;
         this.avgMoisture = avgMoisture;
-        this.mealItems = new ArrayList<>(); // empty by default
+        this.mealItems = new ArrayList<>(); // Will be populated later
     }
 
+    // Save meal and its items to DB
+    public boolean saveToDB(Context context) throws DBHandler.DatabaseException {
+        DBHandler dbHelper = new DBHandler(context);
+        long insertedMealID = dbHelper.insertMeal(this);
 
-    public boolean saveToDB(Context context){
-        DBHandler db_helper = new DBHandler(context);
-        long mealID = db_helper.insertMeal(this);
-
-        if (mealID == -1) {
+        if (insertedMealID == -1) {
+            dbHelper.close();
             return false;
         }
+
         for (mealItem item : mealItems) {
-            boolean itemInserted = db_helper.insertMealItem((int) mealID, item);
+            boolean itemInserted = dbHelper.insertMealItem((int) insertedMealID, item);
             if (!itemInserted) {
+                dbHelper.close();
                 return false;
-                
             }
         }
-        db_helper.close();
+
+        dbHelper.close();
         return true;
     }
 
+    // Getters
+    public int getMealID() { return mealID; }
+    public int getPetID() { return petID; }
+    public String getDate() { return date; }
+    public String getTime() { return time; }
+    public String getDescription() { return description; }
+    public List<mealItem> getMealItems() { return mealItems; }
 
+    public double getTotalKcal() { return totalKcal; }
+    public double getTotalProtein() { return totalProtein; }
+    public double getTotalFats() { return totalFats; }
+    public double getTotalMoisture() { return totalMoisture; }
+
+    public double getAvgKcal() { return avgKcal; }
+    public double getAvgFat() { return avgFat; }
+    public double getAvgProtein() { return avgProtein; }
+    public double getAvgMoisture() { return avgMoisture; }
 }
-
