@@ -68,6 +68,7 @@ public class Meals {
             boolean itemInserted = db_helper.insertMealItem((int) mealID, item);
             if (!itemInserted) {
                 return false;
+                
             }
         }
         db_helper.close();
