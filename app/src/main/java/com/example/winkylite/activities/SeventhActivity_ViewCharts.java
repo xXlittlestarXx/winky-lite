@@ -77,7 +77,7 @@ public class SeventhActivity_ViewCharts extends AppCompatActivity {
         });
     }
 
-    private void loadCharts(DBHandler db) {
+    private void loadCharts(DBHandler db) throws DBHandler.DatabaseException {
         List<Meals> meals = getMealsFromDB(db);
         Pets pet = db.getPetDetails(currentPetId);
 
