@@ -1,24 +1,17 @@
 package com.example.winkylite.activities;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.winkylite.database.DBHandler;
 import com.example.winkylite.R;
-
-import java.io.IOException;
-
+import com.example.winkylite.models.Pets;
 
 public class EigthActivity_PetProfile extends AppCompatActivity {
     private DBHandler dbHandler;
@@ -27,34 +20,37 @@ public class EigthActivity_PetProfile extends AppCompatActivity {
             petKcalTextView, petProteinTextView, petFatsTextView, petMoistureTextView;
 
     private String currentPetName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eighth);
 
-        dbHandler = new DBHandler(this);
-        dbHandler.createDatabaseDirectory();
-        dbHandler.openDatabase();
+        try {
+            dbHandler = new DBHandler(this);
+            dbHandler.initialize();
 
-        Bundle extras = getIntent().getExtras();
-        if (extras == null) {
-            Toast.makeText(this, "No pet information provided!", Toast.LENGTH_LONG).show();
+            Bundle extras = getIntent().getExtras();
+            if (extras == null) {
+                Toast.makeText(this, "No pet information provided!", Toast.LENGTH_LONG).show();
+                finish();
+                return;
+            }
+
+            currentPetName = extras.getString("SELECTED_PET_NAME");
+            if (currentPetName == null || currentPetName.isEmpty()) {
+                Toast.makeText(this, "Pet name not provided!", Toast.LENGTH_LONG).show();
+                finish();
+                return;
+            }
+
+            initializeViews();
+            loadPetData();
+            setUpActivityButtons();
+        } catch (DBHandler.DatabaseException e) {
+            Toast.makeText(this, "Database error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             finish();
-            return;
         }
-
-        currentPetName = extras.getString("SELECTED_PET_NAME");
-        if (currentPetName == null || currentPetName.isEmpty()) {
-            Toast.makeText(this, "Pet name not provided!", Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-
-        initializeViews();
-
-        loadPetData();
-
-        setUpActivityButtons();
     }
 
     private void setUpActivityButtons() {
@@ -75,36 +71,32 @@ public class EigthActivity_PetProfile extends AppCompatActivity {
             return;
         }
 
-        Cursor cursor = null;
-        try {
-            cursor = dbHandler.queryData("SELECT * FROM Pets WHERE wPetID = " + petId);
-            if (cursor != null && cursor.moveToFirst()) {
-                petNameTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow("wPetName")));
-                petAgeTextView.setText(cursor.getInt(cursor.getColumnIndexOrThrow("wPetAge")) + " " + cursor.getString(cursor.getColumnIndexOrThrow("wPetAgeMY")));
-                petTypeTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow("wPetType")));
-                petGenderTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow("wPetGender")));
-                petFixedTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow("wPetFixed")));
-                petActivityTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow("wPetActivityLvl")));
-                petWeightTextView.setText(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetCurrentWeight")) + " kg");
+        Pets pet = dbHandler.getPetDetails(petId);
 
-                int goalWeightCol = cursor.getColumnIndexOrThrow("wPetGoalWeight");
-                if (cursor.isNull(goalWeightCol)) {
-                    petGoalWeightTextView.setText("Not Set");
-                } else {
-                    double goalWeight = cursor.getDouble(goalWeightCol);
-                    petGoalWeightTextView.setText(goalWeight + " kg");
-                }
-
-                petKcalTextView.setText(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetKcalGoal")) + " kcal");
-                petProteinTextView.setText(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetProteinGoal")) + " g protein");
-                petFatsTextView.setText(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetFatsGoal")) + " g fats");
-                petMoistureTextView.setText(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetMoistureGoal")) + " % moisture");
-
-                //cursor.close();
-            }
-        }finally {
-            if (cursor != null) cursor.close();
+        if (pet == null) {
+            Toast.makeText(this, "Pet details not found in database!", Toast.LENGTH_LONG).show();
+            finish();
+            return;
         }
+
+        petNameTextView.setText(currentPetName);
+        petAgeTextView.setText(pet.getPetAge() + " " + pet.getAgeUnit());
+        petTypeTextView.setText(pet.getPetType());
+        petGenderTextView.setText(pet.getPetGender());
+        petFixedTextView.setText(pet.getIsFixed() ? "Yes" : "No");
+        petActivityTextView.setText(pet.getPetActivity());
+        petWeightTextView.setText(pet.getPetCurrentWeight() + " kg");
+
+        if (pet.getHasGoalWeight()) {
+            petGoalWeightTextView.setText(pet.getPetGoalWeight() + " kg");
+        } else {
+            petGoalWeightTextView.setText("Not Set");
+        }
+
+        petKcalTextView.setText(pet.getRecKcal() + " kcal");
+        petProteinTextView.setText(pet.getRecProtein() + " g protein");
+        petFatsTextView.setText(pet.getRecFats() + " g fats");
+        petMoistureTextView.setText(pet.getRecMoisture() + " % moisture");
     }
 
     private void initializeViews() {
