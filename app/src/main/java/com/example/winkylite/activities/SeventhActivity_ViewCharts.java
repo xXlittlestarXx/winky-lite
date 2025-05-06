@@ -1,28 +1,25 @@
 package com.example.winkylite.activities;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import com.bumptech.glide.Glide;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.winkylite.database.DBHandler;
+import com.bumptech.glide.Glide;
 import com.example.winkylite.R;
-
 import com.example.winkylite.calculators.chartCalculator;
 import com.example.winkylite.calculators.chartCalculator.DailyAverage;
+import com.example.winkylite.database.DBHandler;
 import com.example.winkylite.models.Meals;
 import com.example.winkylite.models.Pets;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 
 public class SeventhActivity_ViewCharts extends AppCompatActivity {
     private ImageView kcalChart, proteinChart, fatChart, moistureChart;
@@ -53,23 +50,22 @@ public class SeventhActivity_ViewCharts extends AppCompatActivity {
 
         kcalChart = findViewById(R.id.kcalChart);
         kcalStatus = findViewById(R.id.kcalStatus);
-
         proteinChart = findViewById(R.id.proteinChart);
         proteinStatus = findViewById(R.id.proteinStatus);
-
         fatChart = findViewById(R.id.fatChart);
         fatStatus = findViewById(R.id.fatStatus);
-
         moistureChart = findViewById(R.id.moistureChart);
         moistureStatus = findViewById(R.id.moistureStatus);
 
         DBHandler db = new DBHandler(this);
-        currentPetId = getIntent().getIntExtra("SELECTED_PET_ID", -1);
-
-        loadCharts(db);
+        try {
+            loadCharts(db);
+        } catch (DBHandler.DatabaseException e) {
+            Log.e("SeventhActivity", "Error loading charts: " + e.getMessage());
+        }
 
         Button backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(v->{
+        backButton.setOnClickListener(v -> {
             Intent intent = new Intent(SeventhActivity_ViewCharts.this, FourthActivity_PetDetails.class);
             intent.putExtra("SELECTED_PET_NAME", petName);
             intent.putExtra("SELECTED_PET_ID", currentPetId);
@@ -78,48 +74,36 @@ public class SeventhActivity_ViewCharts extends AppCompatActivity {
     }
 
     private void loadCharts(DBHandler db) throws DBHandler.DatabaseException {
-        List<Meals> meals = getMealsFromDB(db);
+        List<Meals> meals = db.getMealsForPet(currentPetId);
         Pets pet = db.getPetDetails(currentPetId);
 
         if (pet == null) {
             Log.e("SeventhActivity", "Pet with ID " + currentPetId + " not found.");
             return;
         }
+
         Map<String, DailyAverage> averages = chartCalculator.calculateDailyAverages(meals);
 
         List<Double> kcalValues = getOrderedValues(averages, "kcal");
-        String kcalChartURL = chartCalculator.generateChartURL(
-                kcalValues,
-                pet.getRecKcal(),
-                "Daily Calories"
-        );
+        String kcalChartURL = chartCalculator.generateChartURL(kcalValues, pet.getRecKcal(), "Daily Calories");
         loadChartImage(kcalChartURL, kcalChart);
-        double latestKcal = kcalValues.get(kcalValues.size()-1);
+        double latestKcal = kcalValues.get(kcalValues.size() - 1);
         kcalStatus.setText(chartCalculator.compareWithRecommendation(latestKcal, pet.getRecKcal()));
 
         List<Double> proteinValues = getOrderedValues(averages, "protein");
-        String proteinChartURL = chartCalculator.generateChartURL(
-                proteinValues,
-                pet.getRecProtein(),
-                "Daily Protein");
+        String proteinChartURL = chartCalculator.generateChartURL(proteinValues, pet.getRecProtein(), "Daily Protein");
         loadChartImage(proteinChartURL, proteinChart);
         double latestProtein = proteinValues.get(proteinValues.size() - 1);
         proteinStatus.setText(chartCalculator.compareWithRecommendation(latestProtein, pet.getRecProtein()));
 
         List<Double> fatValues = getOrderedValues(averages, "fats");
-        String fatChartURL = chartCalculator.generateChartURL(
-                fatValues,
-                pet.getRecFats(),
-                "Daily Fats");
+        String fatChartURL = chartCalculator.generateChartURL(fatValues, pet.getRecFats(), "Daily Fats");
         loadChartImage(fatChartURL, fatChart);
         double latestFat = fatValues.get(fatValues.size() - 1);
         fatStatus.setText(chartCalculator.compareWithRecommendation(latestFat, pet.getRecFats()));
 
         List<Double> moistureValues = getOrderedValues(averages, "moisture");
-        String moistureChartURL = chartCalculator.generateChartURL(
-                moistureValues,
-                pet.getRecMoisture(),
-                "Daily Moisture");
+        String moistureChartURL = chartCalculator.generateChartURL(moistureValues, pet.getRecMoisture(), "Daily Moisture");
         loadChartImage(moistureChartURL, moistureChart);
         double latestMoisture = moistureValues.get(moistureValues.size() - 1);
         moistureStatus.setText(chartCalculator.compareWithRecommendation(latestMoisture, pet.getRecMoisture()));
@@ -146,12 +130,7 @@ public class SeventhActivity_ViewCharts extends AppCompatActivity {
         return values;
     }
 
-    private List<Meals> getMealsFromDB(DBHandler db) {
-        return db.getMealsForPet(currentPetId);
-    }
     private void loadChartImage(String url, ImageView imageView) {
-        Glide.with(this)
-                .load(url)
-                .into(imageView);
+        Glide.with(this).load(url).into(imageView);
     }
 }

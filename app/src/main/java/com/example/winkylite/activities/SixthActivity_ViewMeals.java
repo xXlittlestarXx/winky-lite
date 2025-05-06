@@ -47,7 +47,7 @@ public class SixthActivity_ViewMeals extends AppCompatActivity {
         displayMeals();
     }
 
-    private void displayMeals() {
+    private void displayMeals() throws DBHandler.DatabaseException {
         List<Meals> mealsList = dbHelper.getMealsForPet(currentPetID);
 
         if (mealsList != null && !mealsList.isEmpty()) {
