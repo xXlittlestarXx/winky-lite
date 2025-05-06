@@ -109,6 +109,7 @@ public class Pets {
         this.recProtein = calc.getRecProtein();
     }
 
+    
     public boolean saveToDB(Context context) {
         DBHandler db_helper = new DBHandler(context);
         try {
