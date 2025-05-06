@@ -109,17 +109,17 @@ public class Pets {
         this.recProtein = calc.getRecProtein();
     }
 
-    public boolean saveToDB(Context context){
+    public boolean saveToDB(Context context) {
         DBHandler db_helper = new DBHandler(context);
         try {
             db_helper.createDatabase();
-        } catch (IOException e){
+            db_helper.openDatabase();
+            return db_helper.insertPet(this);
+        } catch (IOException e) {
             return false;
-        }
-        db_helper.openDatabase();
-        return db_helper.insertPet(this);
-    }
 
+        }
+    }
 }
 
 

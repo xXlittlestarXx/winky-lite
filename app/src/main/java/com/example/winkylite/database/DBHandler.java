@@ -21,200 +21,264 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBHandler extends SQLiteOpenHelper {
+    private static final String TAG = "DBHandler";
     private static final String DB_NAME = "WinkyDB_Version5.db";
     private static final int DB_VERSION = 4;
+
     private final Context context;
-    private String DB_PATH;
-    private SQLiteDatabase myDataBase;
+    private final String dbPath;
+    private SQLiteDatabase database;
+    private volatile boolean initialized = false;
 
     public DBHandler(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
-        this.context = context;
-        DB_PATH = context.getDatabasePath(DB_NAME).getPath();
+        this.context = context.getApplicationContext();
+        this.dbPath = context.getDatabasePath(DB_NAME).getPath();
     }
 
-    public void createDatabase() throws IOException {
-        boolean dbExist = checkDatabase();
+    public synchronized void initialize() throws DatabaseException {
+        if (initialized) {
+            return;
+        }
 
-        if (!dbExist) {
-            File dbFile = new File(DB_PATH);
-            dbFile.getParentFile().mkdirs();
-            copyDatabase();
+        try {
+            boolean dbExists = checkDatabaseExists();
+            if (!dbExists) {
+                createDatabaseDirectory();
+                copyDatabaseFromAssets();
+            }
+            openDatabase();
+            initialized = true;
+        } catch (IOException | SQLException e) {
+            Log.e(TAG, "Database initialization failed", e);
+            throw new DatabaseException("Failed to initialize database", e);
         }
     }
 
-    private boolean checkDatabase () {
+    private boolean checkDatabaseExists() {
         SQLiteDatabase checkDB = null;
         try {
-            checkDB = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READONLY);
+            checkDB = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READONLY);
+            return true;
         } catch (Exception e) {
-            // Database doesn't exist
-        }
-
-        if (checkDB != null) {
-            checkDB.close();
+            Log.d(TAG, "Database doesn't exist yet");
+            return false;
+        } finally {
+            if (checkDB != null) {
+                checkDB.close();
             }
-        return checkDB != null;
+        }
     }
 
-    private void copyDatabase () throws IOException {
-        InputStream input = context.getAssets().open(DB_NAME);
-        OutputStream output = new FileOutputStream(DB_PATH);
+    public void createDatabaseDirectory() {
+        File dbFile = new File(dbPath);
+        File parentDir = dbFile.getParentFile();
+        if (parentDir != null && !parentDir.exists()) {
+            if (!parentDir.mkdirs()) {
+                Log.e(TAG, "Failed to create database directory");
+            }
+        }
+    }
 
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = input.read(buffer)) > 0) {
-            output.write(buffer, 0, length);
+    private void copyDatabaseFromAssets() throws IOException {
+        InputStream input = null;
+        OutputStream output = null;
+
+        try {
+            input = context.getAssets().open(DB_NAME);
+            output = new FileOutputStream(dbPath);
+
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = input.read(buffer)) > 0) {
+                output.write(buffer, 0, length);
+            }
+        } finally {
+            try {
+                if (output != null) {
+                    output.flush();
+                    output.close();
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "Error closing output stream", e);
+            }
+            try {
+                if (input != null) {
+                    input.close();
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "Error closing input stream", e);
+            }
+        }
+    }
+
+    public synchronized void openDatabase() throws SQLException {
+        if (database != null && database.isOpen()) {
+            return;
         }
 
-        output.flush();
-        output.close();
-        input.close();
-    }
-    public void openDatabase () throws SQLException {
-        myDataBase = getWritableDatabase();
-    }
+        database = SQLiteDatabase.openDatabase(
+                dbPath,
+                null,
+                SQLiteDatabase.OPEN_READWRITE | SQLiteDatabase.CREATE_IF_NECESSARY
+        );
 
-
-    @Override
-    public void onCreate(SQLiteDatabase myDataBase) {
-        Log.d("DBHandler", "Pre-populated database — onCreate not used.");
+        database.execSQL("PRAGMA foreign_keys=ON;");
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase myDataBase, int oldVersion, int newVersion) {
-        Log.d("DBHandler", "Pre-populated database — onUpgrade not used.");
+    public void onCreate(SQLiteDatabase db) {
+        Log.d(TAG, "Pre-populated database — onCreate not used.");
     }
 
-    public Cursor queryData (String query){
-        return myDataBase.rawQuery(query, null);
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.d(TAG, "Pre-populated database — onUpgrade not used.");
     }
 
-    public boolean insertPet (Pets Pets){
-
-                if (myDataBase == null || !myDataBase.isOpen()){
-                    openDatabase();
-                }
-
-                ContentValues values = new ContentValues();
-
-                values.put("userID", 1);
-
-                values.put("wPetName", Pets.getPetName());
-                values.put("wPetType", Pets.getPetType());
-
-                values.put("wPetAge", Pets.getPetAge());
-                values.put("wPetAgeMY", Pets.getAgeUnit());
-
-                values.put("wPetGender", Pets.getPetGender());
-                values.put("wPetFixed", Pets.getIsFixed() ? "Yes" : "No");
-
-                values.put("wPetActivityLvl", Pets.getPetActivity());
-                values.put("wPetActivity", (double) Pets.getPetActivityLevel());
-
-                values.put("wPetCurrentWeight", Pets.getPetCurrentWeight());
-
-                if (Pets.getHasGoalWeight()) {
-                    values.put("wPetGoalWeight", Pets.getPetGoalWeight());
-                } else {
-                    values.putNull("wPetGoalWeight");
-                }
-
-                values.put("wPetKcalGoal", Pets.getRecKcal());
-                values.put("wPetProteinGoal", Pets.getRecProtein());
-                values.put("wPetFatsGoal", Pets.getRecFats());
-                values.put("wPetMoistureGoal", 75);
-
-        long result = myDataBase.insert("Pets", null, values);
-        return result != -1;
-
-    }
-
-    public Cursor getAllPets () {
-        if (myDataBase == null || !myDataBase.isOpen()) {
-            openDatabase();
+    @Override
+    public synchronized void close() {
+        try {
+            if (database != null && database.isOpen()) {
+                database.close();
+                database = null;
+            }
+        } finally {
+            super.close();
+            initialized = false;
         }
+    }
+
+    public boolean insertPet(Pets pet) throws DatabaseException {
+        checkInitialized();
+
+        ContentValues values = new ContentValues();
+        values.put("userID", 1);
+        values.put("wPetName", pet.getPetName());
+        values.put("wPetType", pet.getPetType());
+        values.put("wPetAge", pet.getPetAge());
+        values.put("wPetAgeMY", pet.getAgeUnit());
+        values.put("wPetGender", pet.getPetGender());
+        values.put("wPetFixed", pet.getIsFixed() ? "Yes" : "No");
+        values.put("wPetActivityLvl", pet.getPetActivity());
+        values.put("wPetActivity", (double) pet.getPetActivityLevel());
+        values.put("wPetCurrentWeight", pet.getPetCurrentWeight());
+        values.put("wPetKcalGoal", pet.getRecKcal());
+        values.put("wPetProteinGoal", pet.getRecProtein());
+        values.put("wPetFatsGoal", pet.getRecFats());
+        values.put("wPetMoistureGoal", 75);
+
+        if (pet.getHasGoalWeight()) {
+            values.put("wPetGoalWeight", pet.getPetGoalWeight());
+        } else {
+            values.putNull("wPetGoalWeight");
+        }
+
+        try {
+            long result = database.insert("Pets", null, values);
+            return result != -1;
+        } catch (SQLException e) {
+            Log.e(TAG, "Failed to insert pet", e);
+            throw new DatabaseException("Failed to insert pet", e);
+        }
+    }
+
+    public Cursor getAllPets() throws DatabaseException {
+        checkInitialized();
 
         String query = "SELECT wPetName FROM Pets WHERE userID = 1";
-        return myDataBase.rawQuery(query, null);
+        try {
+            return database.rawQuery(query, null);
+        } catch (SQLException e) {
+            Log.e(TAG, "Failed to get pets", e);
+            throw new DatabaseException("Failed to get pets", e);
+        }
     }
-    public int getPetIdByName (String petName){
+
+    public int getPetIdByName(String petName) throws DatabaseException {
+        checkInitialized();
+
         if (petName == null || petName.isEmpty()) {
-            Log.e("DBHandler", "Pet name is null or empty!");
-            return -1;
-        }
-        if (myDataBase == null || !myDataBase.isOpen()) {
-            openDatabase();
+            throw new IllegalArgumentException("Pet name cannot be null or empty");
         }
 
-        int wPetId = -1;
-        String query = "SELECT wPetID FROM Pets WHERE wPetName = ?";
         Cursor cursor = null;
-        try{
-                cursor = myDataBase.rawQuery(query, new String[]{petName});
+        try {
+            String query = "SELECT wPetID FROM Pets WHERE wPetName = ?";
+            cursor = database.rawQuery(query, new String[]{petName});
 
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 int columnIndex = cursor.getColumnIndex("wPetID");
                 if (columnIndex != -1) {
-                    wPetId = cursor.getInt(columnIndex);
+                    return cursor.getInt(columnIndex);
                 }
             }
+            return -1;
+        } catch (SQLException e) {
+            Log.e(TAG, "Failed to get pet ID by name", e);
+            throw new DatabaseException("Failed to get pet ID by name", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
-        }finally{
-                if (cursor != null) cursor.close();
-        }
-
-        return wPetId;
     }
 
-
-    public long insertMeal(Meals Meals){
-        if (myDataBase == null || !myDataBase.isOpen()){
-            openDatabase();
-        }
-        String wPetFixed = "bug";
+    public long insertMeal(Meals meal) throws DatabaseException {
+        checkInitialized();
 
         ContentValues values = new ContentValues();
-        values.put("petID", Meals.getPetID());
-        values.put("wDate", Meals.getDate());
-        values.put("wTime", Meals.getTime());
-        values.put("wDescription", Meals.getDescription());
-        values.put("totalKcal", Meals.getTotalKcal());
-        values.put("totalMoisture", Meals.getTotalMoisture());
-        values.put("totalProtein", Meals.getTotalProtein());
-        values.put("totalFats", Meals.getTotalFats());
-        values.put("wPetFixed", wPetFixed);
+        values.put("petID", meal.getPetID());
+        values.put("wDate", meal.getDate());
+        values.put("wTime", meal.getTime());
+        values.put("wDescription", meal.getDescription());
+        values.put("totalKcal", meal.getTotalKcal());
+        values.put("totalMoisture", meal.getTotalMoisture());
+        values.put("totalProtein", meal.getTotalProtein());
+        values.put("totalFats", meal.getTotalFats());
+        values.put("wPetFixed", "bug");
 
-        long wMealID = myDataBase.insert("Meals", null, values);
-        return wMealID;
+        try {
+            return database.insert("Meals", null, values);
+        } catch (SQLException e) {
+            Log.e(TAG, "Failed to insert meal", e);
+            throw new DatabaseException("Failed to insert meal", e);
+        }
     }
 
-    public boolean insertMealItem(int wMealID, mealItem item) {
-        //SQLiteDatabase myDataBase = getWritableDatabase();
-        ContentValues values = new ContentValues();
+    public boolean insertMealItem(int mealId, mealItem item) throws DatabaseException {
+        checkInitialized();
 
-        values.put("mealID", wMealID);
+        ContentValues values = new ContentValues();
+        values.put("mealID", mealId);
         values.put("itemType", item.getType());
         values.put("kcalCount", item.getKcal());
         values.put("moistureAmt", item.getMoisture());
         values.put("proteinAmt", item.getProtein());
         values.put("fatsAmt", item.getFats());
 
-        long result = myDataBase.insert("MealItems", null, values);
-        return result != -1;
+        try {
+            long result = database.insert("MealItems", null, values);
+            return result != -1;
+        } catch (SQLException e) {
+            Log.e(TAG, "Failed to insert meal item", e);
+            throw new DatabaseException("Failed to insert meal item", e);
+        }
     }
 
-    public List<Meals> getMealsForPet(int petID) {
+    public List<Meals> getMealsForPet(int petId) throws DatabaseException {
+        checkInitialized();
+
         List<Meals> mealsList = new ArrayList<>();
-
-        SQLiteDatabase myDataBase = this.getReadableDatabase();
         Cursor cursor = null;
-        try {
-            cursor = myDataBase.rawQuery("SELECT * FROM Meals WHERE petID = ? ORDER BY wDate DESC, wTime DESC",
-                    new String[]{String.valueOf(petID)});
 
-            if (cursor.moveToFirst()) {
+        try {
+            cursor = database.rawQuery(
+                    "SELECT * FROM Meals WHERE petID = ? ORDER BY wDate DESC, wTime DESC",
+                    new String[]{String.valueOf(petId)}
+            );
+
+            if (cursor != null && cursor.moveToFirst()) {
                 do {
                     int mealId = cursor.getInt(cursor.getColumnIndexOrThrow("wMealID"));
                     String date = cursor.getString(cursor.getColumnIndexOrThrow("wDate"));
@@ -224,86 +288,106 @@ public class DBHandler extends SQLiteOpenHelper {
                     double avgProtein = cursor.getDouble(cursor.getColumnIndexOrThrow("totalProtein"));
                     double avgMoisture = cursor.getDouble(cursor.getColumnIndexOrThrow("totalMoisture"));
 
-                    Meals meal = new Meals(mealId, petID, date, time, avgKcal, avgFat, avgProtein, avgMoisture);
+                    Meals meal = new Meals(mealId, petId, date, time, avgKcal, avgFat, avgProtein, avgMoisture);
                     mealsList.add(meal);
                 } while (cursor.moveToNext());
             }
-
+            return mealsList;
+        } catch (SQLException e) {
+            Log.e(TAG, "Failed to get meals for pet", e);
+            throw new DatabaseException("Failed to get meals for pet", e);
         } finally {
-            if (cursor != null) cursor.close();
+            if (cursor != null) {
+                cursor.close();
+            }
         }
-        return mealsList;
     }
 
-    public Cursor getMealItemsForMeal(int mealID) {
-        if (myDataBase == null || !myDataBase.isOpen()) {
-            openDatabase();
-        }
+    public Cursor getMealItemsForMeal(int mealId) throws DatabaseException {
+        checkInitialized();
 
-        String query = "SELECT * FROM MealItems WHERE mealID = ?";
-        return myDataBase.rawQuery(query, new String[]{String.valueOf(mealID)});
+        try {
+            String query = "SELECT * FROM MealItems WHERE mealID = ?";
+            return database.rawQuery(query, new String[]{String.valueOf(mealId)});
+        } catch (SQLException e) {
+            Log.e(TAG, "Failed to get meal items", e);
+            throw new DatabaseException("Failed to get meal items", e);
+        }
     }
 
-    public double[] getPetRecommendations(int petID) {
-        if (myDataBase == null || !myDataBase.isOpen()) {
-            openDatabase();
-        }
+    public double[] getPetRecommendations(int petId) throws DatabaseException {
+        checkInitialized();
 
-        double[] recs = new double[4];
+        double[] recommendations = new double[4];
         Cursor cursor = null;
 
         try {
-            cursor = myDataBase.rawQuery(
-                    "SELECT wPetKcalGoal, wPetProteinGoal, wPetFatsGoal, wPetMoistureGoal FROM Pets WHERE wPetID = ?",
-                    new String[]{String.valueOf(petID)}
+            cursor = database.rawQuery(
+                    "SELECT wPetKcalGoal, wPetProteinGoal, wPetFatsGoal, wPetMoistureGoal " +
+                            "FROM Pets WHERE wPetID = ?",
+                    new String[]{String.valueOf(petId)}
             );
 
-            if (cursor.moveToFirst()) {
-                recs[0] = cursor.getDouble(0);
-                recs[1] = cursor.getDouble(1);
-                recs[2] = cursor.getDouble(2);
-                recs[3] = cursor.getDouble(3);
+            if (cursor != null && cursor.moveToFirst()) {
+                recommendations[0] = cursor.getDouble(0);
+                recommendations[1] = cursor.getDouble(1);
+                recommendations[2] = cursor.getDouble(2);
+                recommendations[3] = cursor.getDouble(3);
             }
-
-        }finally{
-            if (cursor != null) cursor.close();
+            return recommendations;
+        } catch (SQLException e) {
+            Log.e(TAG, "Failed to get pet recommendations", e);
+            throw new DatabaseException("Failed to get pet recommendations", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
-        return recs;
     }
 
-    public Pets getPetDetails(int petID) {
-        if (myDataBase == null || !myDataBase.isOpen()) {
-            openDatabase();
-        }
+    public Pets getPetDetails(int petId) throws DatabaseException {
+        checkInitialized();
 
         Cursor cursor = null;
-
         try {
-            cursor = myDataBase.rawQuery("SELECT wPetKcalGoal, wPetProteinGoal, wPetFatsGoal, wPetMoistureGoal FROM Pets WHERE wPetID = ?",
-                    new String[]{String.valueOf(petID)});
+            cursor = database.rawQuery(
+                    "SELECT wPetKcalGoal, wPetProteinGoal, wPetFatsGoal, wPetMoistureGoal " +
+                            "FROM Pets WHERE wPetID = ?",
+                    new String[]{String.valueOf(petId)}
+            );
 
-            Pets pet = null;
-            if (cursor.moveToFirst()) {
-                pet = new Pets();
+            if (cursor != null && cursor.moveToFirst()) {
+                Pets pet = new Pets();
                 pet.setRecKcal(cursor.getDouble(0));
                 pet.setRecProtein(cursor.getDouble(1));
                 pet.setRecFats(cursor.getDouble(2));
                 pet.setRecMoisture(cursor.getDouble(3));
+                return pet;
             }
-
-            return pet;
+            return null;
+        } catch (SQLException e) {
+            Log.e(TAG, "Failed to get pet details", e);
+            throw new DatabaseException("Failed to get pet details", e);
         } finally {
-            if (cursor != null) cursor.close();
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 
-    @Override
-    public synchronized void close () {
-        if (myDataBase != null) {
-            myDataBase.close();
+    private void checkInitialized() throws DatabaseException {
+        if (!initialized) {
+            throw new DatabaseException("Database not initialized. Call initialize() first.");
         }
-        super.close();
     }
 
+    public static class DatabaseException extends Exception {
+        public DatabaseException(String message) {
+            super(message);
+        }
 
+        public DatabaseException(String message, Throwable cause) {
+            super(message, cause);
+        }
+    }
 }

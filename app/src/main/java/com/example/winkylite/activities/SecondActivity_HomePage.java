@@ -40,42 +40,56 @@ public class SecondActivity_HomePage extends AppCompatActivity {
 
         });
 
-        loadPetButtons();
+        try {
+            loadPetButtons();
+        } catch (DBHandler.DatabaseException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadPetButtons();
+        try {
+            loadPetButtons();
+        } catch (DBHandler.DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private void loadPetButtons() {
+    private void loadPetButtons() throws DBHandler.DatabaseException {
         LinearLayout petButtonContainer = findViewById(R.id.petButtonContainer);
         petButtonContainer.removeAllViews();
 
-        Cursor cursor = dbHelper.getAllPets();
+        try (Cursor cursor = dbHelper.getAllPets()) {
 
-        if (cursor != null && cursor.moveToFirst()){
-            int count = 0;
-            do{
-                @SuppressLint("Range") String petName = cursor.getString(cursor.getColumnIndex("wPetName"));
-                Button petButton = new Button(this);
-                petButton.setText(petName);
-                petButton.setOnClickListener(v->{
-                    int petID = dbHelper.getPetIdByName(petName);
+            if (cursor != null && cursor.moveToFirst()) {
+                int count = 0;
+                do {
+                    @SuppressLint("Range") String petName = cursor.getString(cursor.getColumnIndex("wPetName"));
+                    Button petButton = new Button(this);
+                    petButton.setText(petName);
+                    petButton.setOnClickListener(v -> {
+                        int petID = 0;
+                        try {
+                            petID = dbHelper.getPetIdByName(petName);
+                        } catch (DBHandler.DatabaseException e) {
+                            throw new RuntimeException(e);
+                        }
 
-                    Intent detailsIntent = new Intent(
-                            SecondActivity_HomePage.this,
-                            FourthActivity_PetDetails.class );
-                    detailsIntent.putExtra("SELECTED_PET_NAME", petName);
-                    detailsIntent.putExtra("SELECTED_PET_ID", petID);
-                    startActivity(detailsIntent);
-                });
-                petButtonContainer.addView(petButton);
-                count++;
-            } while (cursor.moveToNext() && count < 5);
-            cursor.close();
+                        Intent detailsIntent = new Intent(
+                                SecondActivity_HomePage.this,
+                                FourthActivity_PetDetails.class);
+                        detailsIntent.putExtra("SELECTED_PET_NAME", petName);
+                        detailsIntent.putExtra("SELECTED_PET_ID", petID);
+                        startActivity(detailsIntent);
+                    });
+                    petButtonContainer.addView(petButton);
+                    count++;
+                } while (cursor.moveToNext() && count < 5);
+                cursor.close();
+            }
         }
     }
 

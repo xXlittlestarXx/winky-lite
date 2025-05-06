@@ -33,15 +33,8 @@ public class EigthActivity_PetProfile extends AppCompatActivity {
         setContentView(R.layout.activity_eighth);
 
         dbHandler = new DBHandler(this);
-        try {
-            dbHandler.createDatabase();
-            dbHandler.openDatabase();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Database error", Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
+        dbHandler.createDatabaseDirectory();
+        dbHandler.openDatabase();
 
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
@@ -73,7 +66,7 @@ public class EigthActivity_PetProfile extends AppCompatActivity {
         });
     }
 
-    private void loadPetData() {
+    private void loadPetData() throws DBHandler.DatabaseException {
         int petId = dbHandler.getPetIdByName(currentPetName);
 
         if (petId == -1) {
