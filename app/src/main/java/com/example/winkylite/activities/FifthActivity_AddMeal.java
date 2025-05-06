@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.winkylite.R;
 import com.example.winkylite.calculators.mealCalculator;
+import com.example.winkylite.database.DBHandler;
 import com.example.winkylite.models.Meals;
 import com.example.winkylite.models.mealItem;
 
@@ -111,7 +112,12 @@ public class FifthActivity_AddMeal extends AppCompatActivity{
                     mealItems
             );
 
-            boolean success = meal.saveToDB(this);
+            boolean success = false;
+            try {
+                success = meal.saveToDB(this);
+            } catch (DBHandler.DatabaseException e) {
+                throw new RuntimeException(e);
+            }
 
             if (success) {
                 Toast.makeText(this, "Added to database successfully", Toast.LENGTH_SHORT).show();
