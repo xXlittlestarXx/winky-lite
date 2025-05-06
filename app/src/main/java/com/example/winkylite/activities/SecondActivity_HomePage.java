@@ -44,6 +44,7 @@ public class SecondActivity_HomePage extends AppCompatActivity {
             loadPetButtons();
         } catch (DBHandler.DatabaseException e) {
             throw new RuntimeException(e);
+            
         }
 
     }
