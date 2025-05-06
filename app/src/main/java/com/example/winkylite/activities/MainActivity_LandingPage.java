@@ -33,7 +33,8 @@ public class MainActivity_LandingPage extends AppCompatActivity {
 
         DBHandler dbHelper = new DBHandler(this);
         try {
-            dbHelper.createDatabase();
+            dbHelper.createDatabaseDirctory();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
