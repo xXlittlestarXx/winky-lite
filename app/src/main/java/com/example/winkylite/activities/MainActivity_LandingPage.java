@@ -6,9 +6,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.winkylite.database.DBHandler;
 import com.example.winkylite.R;
@@ -27,17 +25,11 @@ public class MainActivity_LandingPage extends AppCompatActivity {
         continueButton = findViewById(R.id.button);
         continueButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity_LandingPage.this, SecondActivity_HomePage.class);
-
             startActivity(intent);
         });
 
-        DBHandler dbHelper = new DBHandler(this);
-        try {
-            dbHelper.createDatabaseDirctory();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        dbHelper = new DBHandler(this);
+        dbHelper.createDatabaseDirectory();
         dbHelper.openDatabase();
     }
 
@@ -57,7 +49,6 @@ public class MainActivity_LandingPage extends AppCompatActivity {
         values.put("wPassword", "testingpw");
         values.put("wTheme", 1);
 
-        long result = db.insertWithOnConflict("Users", null, values,
-                SQLiteDatabase.CONFLICT_IGNORE);
+        db.insertWithOnConflict("Users", null, values, SQLiteDatabase.CONFLICT_IGNORE);
     }
 }
