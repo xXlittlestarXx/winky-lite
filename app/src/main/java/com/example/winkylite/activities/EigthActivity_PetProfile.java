@@ -13,6 +13,9 @@ import com.example.winkylite.database.DBHandler;
 import com.example.winkylite.R;
 import com.example.winkylite.models.Pets;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 public class EigthActivity_PetProfile extends AppCompatActivity {
     private DBHandler dbHandler;
     private TextView petNameTextView, petAgeTextView, petTypeTextView, petGenderTextView,
@@ -20,6 +23,7 @@ public class EigthActivity_PetProfile extends AppCompatActivity {
             petKcalTextView, petProteinTextView, petFatsTextView, petMoistureTextView;
 
     private String currentPetName;
+    private int currentPetID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,13 @@ public class EigthActivity_PetProfile extends AppCompatActivity {
             Bundle extras = getIntent().getExtras();
             if (extras == null) {
                 Toast.makeText(this, "No pet information provided!", Toast.LENGTH_LONG).show();
+                finish();
+                return;
+            }
+
+            currentPetID = extras.getInt("SELECTED_PET_ID");
+            if (currentPetID == -1 || currentPetID == 0) {
+                Toast.makeText(this, "Pet ID not provided!", Toast.LENGTH_LONG).show();
                 finish();
                 return;
             }
@@ -71,7 +82,7 @@ public class EigthActivity_PetProfile extends AppCompatActivity {
             return;
         }
 
-        Pets pet = dbHandler.getPetDetails(petId);
+        Pets pet = dbHandler.getPetDetails(currentPetID);
 
         if (pet == null) {
             Toast.makeText(this, "Pet details not found in database!", Toast.LENGTH_LONG).show();
@@ -79,24 +90,32 @@ public class EigthActivity_PetProfile extends AppCompatActivity {
             return;
         }
 
-        petNameTextView.setText(currentPetName);
-        petAgeTextView.setText(pet.getPetAge() + " " + pet.getAgeUnit());
-        petTypeTextView.setText(pet.getPetType());
-        petGenderTextView.setText(pet.getPetGender());
-        petFixedTextView.setText(pet.getIsFixed() ? "Yes" : "No");
-        petActivityTextView.setText(pet.getPetActivity());
-        petWeightTextView.setText(pet.getPetCurrentWeight() + " kg");
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
+
+        //rounded
+        String roundKcal =df.format(pet.getRecKcal());
+        String roundProtein = df.format(pet.getRecProtein());
+        String roundFats = df.format(pet.getRecFats());
+
+        petNameTextView.setText("Name: " + currentPetName);
+        petAgeTextView.setText("Age: " + pet.getPetAge() + " " + pet.getAgeUnit());
+        petTypeTextView.setText("Type: " + pet.getPetType());
+        petGenderTextView.setText("Gender: " + pet.getPetGender());
+        petFixedTextView.setText("Fixed: "  + (pet.getIsFixed() ? "Yes" : "No"));
+        petActivityTextView.setText("Activity Level: "+ pet.getPetActivity());
+        petWeightTextView.setText("Current Weight: " + pet.getPetCurrentWeight() + " kg");
 
         if (pet.getHasGoalWeight()) {
-            petGoalWeightTextView.setText(pet.getPetGoalWeight() + " kg");
+            petGoalWeightTextView.setText("Goal Weight: " + pet.getPetGoalWeight() + " kg");
         } else {
-            petGoalWeightTextView.setText("Not Set");
+            petGoalWeightTextView.setText("Goal Weight Not Set.");
         }
 
-        petKcalTextView.setText(pet.getRecKcal() + " kcal");
-        petProteinTextView.setText(pet.getRecProtein() + " g protein");
-        petFatsTextView.setText(pet.getRecFats() + " g fats");
-        petMoistureTextView.setText(pet.getRecMoisture() + " % moisture");
+        petKcalTextView.setText("Recommended Kilocalories: " + roundKcal + " kcal per day");
+        petProteinTextView.setText("Recommended Protein: " + roundProtein + " % protein per day");
+        petFatsTextView.setText("Recommended Fats: " + pet.getRecFats() + " % fats per day");
+        petMoistureTextView.setText("Recommended Moisture: " + pet.getRecMoisture() + " % moisture per day");
     }
 
     private void initializeViews() {

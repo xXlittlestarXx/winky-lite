@@ -283,12 +283,13 @@ public class DBHandler extends SQLiteOpenHelper {
                     int mealId = cursor.getInt(cursor.getColumnIndexOrThrow("wMealID"));
                     String date = cursor.getString(cursor.getColumnIndexOrThrow("wDate"));
                     String time = cursor.getString(cursor.getColumnIndexOrThrow("wTime"));
+                    String descr =  cursor.getString(cursor.getColumnIndexOrThrow("wDescription"));
                     double avgKcal = cursor.getDouble(cursor.getColumnIndexOrThrow("totalKcal"));
                     double avgFat = cursor.getDouble(cursor.getColumnIndexOrThrow("totalFats"));
                     double avgProtein = cursor.getDouble(cursor.getColumnIndexOrThrow("totalProtein"));
                     double avgMoisture = cursor.getDouble(cursor.getColumnIndexOrThrow("totalMoisture"));
 
-                    Meals meal = new Meals(mealId, petId, date, time, avgKcal, avgFat, avgProtein, avgMoisture);
+                    Meals meal = new Meals(mealId, petId, date, time, descr, avgKcal, avgFat, avgProtein, avgMoisture);
                     mealsList.add(meal);
                 } while (cursor.moveToNext());
             }
@@ -315,7 +316,7 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
-    public double[] getPetRecommendations(int petId) throws DatabaseException {
+    /*public double[] getPetRecommendations(int petId) throws DatabaseException {
         checkInitialized();
 
         double[] recommendations = new double[4];
@@ -343,7 +344,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-    }
+    } */
 
     public Pets getPetDetails(int petId) throws DatabaseException {
         checkInitialized();
@@ -351,17 +352,38 @@ public class DBHandler extends SQLiteOpenHelper {
         Cursor cursor = null;
         try {
             cursor = database.rawQuery(
-                    "SELECT wPetKcalGoal, wPetProteinGoal, wPetFatsGoal, wPetMoistureGoal " +
+                    "SELECT wPetName, wPetType, wPetAge, wPetAgeMY, wPetGender, " +
+                            "wPetActivityLvl, wPetActivity, wPetCurrentWeight, wPetGoalWeight, " +
+                            "wPetKcalGoal, wPetProteinGoal, wPetMoistureGoal, wPetFatsGoal, " +
+                            "wPetFixed " +
                             "FROM Pets WHERE wPetID = ?",
                     new String[]{String.valueOf(petId)}
             );
 
             if (cursor != null && cursor.moveToFirst()) {
                 Pets pet = new Pets();
-                pet.setRecKcal(cursor.getDouble(0));
-                pet.setRecProtein(cursor.getDouble(1));
-                pet.setRecFats(cursor.getDouble(2));
-                pet.setRecMoisture(cursor.getDouble(3));
+                pet.setPetName(cursor.getString(cursor.getColumnIndexOrThrow("wPetName")));
+                pet.setPetType(cursor.getString(cursor.getColumnIndexOrThrow("wPetType")));
+                pet.setPetAge(cursor.getInt(cursor.getColumnIndexOrThrow("wPetAge")));
+                pet.setPetAgeUnit(cursor.getString(cursor.getColumnIndexOrThrow("wPetAgeMY")));
+                pet.setPetGender(cursor.getString(cursor.getColumnIndexOrThrow("wPetGender")));
+                pet.setIsFixed(cursor.getString(cursor.getColumnIndexOrThrow("wPetFixed")).equalsIgnoreCase("Yes"));
+                pet.setActivityLvl(cursor.getInt(cursor.getColumnIndexOrThrow("wPetActivity")));
+                pet.setCurrentWeight(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetCurrentWeight")));
+
+                int goalWeightIndex = cursor.getColumnIndex("wPetGoalWeight");
+                if (!cursor.isNull(goalWeightIndex)) {
+                    pet.setGoalWeight(cursor.getDouble(goalWeightIndex));
+                    pet.setHasGoalWeight(true);
+                } else {
+                    pet.setGoalWeight(0.0);
+                    pet.setHasGoalWeight(false);
+                }
+
+                pet.setRecKcal(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetKcalGoal")));
+                pet.setRecProtein(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetProteinGoal")));
+                pet.setRecFats(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetFatsGoal")));
+                pet.setRecMoisture(cursor.getDouble(cursor.getColumnIndexOrThrow("wPetMoistureGoal")));
                 return pet;
             }
             return null;

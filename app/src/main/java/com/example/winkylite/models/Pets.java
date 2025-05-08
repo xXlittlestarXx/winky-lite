@@ -46,6 +46,16 @@ public class Pets {
     public double getRecKcal() {return recKcal;}
     public double getRecFats() {return recFats;}
     public double getRecMoisture() {return recMoisture;}
+    public String setPetName(String s) {return this.petName = s;}
+    public String setPetAgeUnit(String s) { return this.ageUnit = s;}
+    public String setPetGender(String s) {return this.petGender = s;}
+    public String setPetType(String s){ return this.petType = s;}
+    public boolean setIsFixed(boolean bool) {return this.isFixed = bool;}
+    public boolean setHasGoalWeight(boolean bool) {return this.hasGoalWeight = bool;}
+    public int setPetAge(int num) { return this.petAge = num;}
+    public int setActivityLvl(int num){ return this.activityLevel = num;}
+    public double setCurrentWeight(double val){return this.petCurrentWeight = val;}
+    public double setGoalWeight(double val) {return this.petGoalWeight = val;}
     public void setRecProtein(double val) {this.recProtein = val;}
     public void setRecKcal(double val) {this.recKcal = val;}
     public void setRecFats(double val) {this.recFats = val;}

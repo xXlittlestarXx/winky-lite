@@ -38,11 +38,12 @@ public class Meals {
     }
 
     // Constructor for loading meals from database
-    public Meals(int mealID, int petID, String date, String time, double avgKcal, double avgFat, double avgProtein, double avgMoisture) {
+    public Meals(int mealID, int petID, String date, String time, String description, double avgKcal, double avgFat, double avgProtein, double avgMoisture) {
         this.mealID = mealID;
         this.petID = petID;
         this.date = date;
         this.time = time;
+        this.description = description;
         this.avgKcal = avgKcal;
         this.avgFat = avgFat;
         this.avgProtein = avgProtein;
