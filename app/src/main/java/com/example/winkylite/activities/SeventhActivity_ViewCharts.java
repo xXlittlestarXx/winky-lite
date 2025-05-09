@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.winkylite.R;
@@ -26,11 +27,23 @@ public class SeventhActivity_ViewCharts extends AppCompatActivity {
     private TextView kcalStatus, proteinStatus, fatStatus, moistureStatus;
     private int currentPetId;
     private String petName;
+    private DBHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seventh);
+
+        try {
+            dbHandler = new DBHandler(this);
+            dbHandler.initialize();
+            Log.d("DB", "Database initialized in onCreate");
+        } catch (DBHandler.DatabaseException e) {
+            Log.e("DB", "Database initialization failed", e);
+            Toast.makeText(this, "Database initialization failed. Please restart the app.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
 
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
@@ -57,9 +70,9 @@ public class SeventhActivity_ViewCharts extends AppCompatActivity {
         moistureChart = findViewById(R.id.moistureChart);
         moistureStatus = findViewById(R.id.moistureStatus);
 
-        DBHandler db = new DBHandler(this);
+        //DBHandler db = new DBHandler(this);
         try {
-            loadCharts(db);
+            loadCharts();
         } catch (DBHandler.DatabaseException e) {
             Log.e("SeventhActivity", "Error loading charts: " + e.getMessage());
         }
@@ -73,9 +86,9 @@ public class SeventhActivity_ViewCharts extends AppCompatActivity {
         });
     }
 
-    private void loadCharts(DBHandler db) throws DBHandler.DatabaseException {
-        List<Meals> meals = db.getMealsForPet(currentPetId);
-        Pets pet = db.getPetDetails(currentPetId);
+    private void loadCharts() throws DBHandler.DatabaseException {
+        List<Meals> meals = dbHandler.getMealsForPet(currentPetId);
+        Pets pet = dbHandler.getPetDetails(currentPetId);
 
         if (pet == null) {
             Log.e("SeventhActivity", "Pet with ID " + currentPetId + " not found.");
