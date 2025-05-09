@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -35,14 +36,27 @@ public class FifthActivity_AddMeal extends AppCompatActivity{
     private LayoutInflater inflater;
     private int itemCount = 0;
     private final int MAX_ITEMS = 5;
-    private int currentPetID;
+    private int currentPetID, currentMealId;
+    private DBHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fifth);
 
+        try {
+            dbHandler = new DBHandler(this);
+            dbHandler.initialize();
+            Log.d("DB", "Database initialized in onCreate");
+        } catch (DBHandler.DatabaseException e) {
+            Log.e("DB", "Database initialization failed", e);
+            Toast.makeText(this, "Database initialization failed. Please restart the app.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
         currentPetID = getIntent().getIntExtra("SELECTED_PET_ID", -1);
+        currentMealId = getIntent().getIntExtra("SELECTED_MEAL_ID", -1);
 
         itemContainer = findViewById(R.id.itemContainer);
 
@@ -105,6 +119,7 @@ public class FifthActivity_AddMeal extends AppCompatActivity{
             double[] averages = mealCalculator.calculateMeal(mealItems);
 
             Meals meal = new Meals(
+                    currentMealId,
                     currentPetID,
                     etDate.getText().toString(),
                     etTime.getText().toString(),
@@ -112,7 +127,7 @@ public class FifthActivity_AddMeal extends AppCompatActivity{
                     mealItems
             );
 
-            boolean success = false;
+            boolean success;
             try {
                 success = meal.saveToDB(this);
             } catch (DBHandler.DatabaseException e) {
@@ -167,14 +182,22 @@ public class FifthActivity_AddMeal extends AppCompatActivity{
                 calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
-
-
-
     private double parseDouble(EditText et) {
         try {
             return Double.parseDouble(et.getText().toString());
         } catch (NumberFormatException e) {
             return 0.0;
+        }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (dbHandler != null) {
+            try {
+                dbHandler.close();
+            } catch (Exception e) {
+                Log.e("DB", "Error closing database", e);
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ package com.example.winkylite.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -56,6 +57,7 @@ public class SixthActivity_ViewMeals extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void displayMeals() throws DBHandler.DatabaseException {
         mealsLayout.removeAllViews(); // Clear any existing views
 
@@ -74,15 +76,24 @@ public class SixthActivity_ViewMeals extends AppCompatActivity {
             View mealView = inflater.inflate(R.layout.meal_view_template, mealsLayout, false);
 
             ((TextView) mealView.findViewById(R.id.mealDate)).setText("Date: " + meal.getDate());
+
             ((TextView) mealView.findViewById(R.id.mealTime)).setText("Time: " + meal.getTime());
+
             ((TextView) mealView.findViewById(R.id.mealDescription)).setText("Description: " +
                     (meal.getDescription() != null ? meal.getDescription() : ""));
+
+            ((TextView) mealView.findViewById(R.id.mealItemCount)).setText(
+                    "Items: " + meal.getMealItems().size());
+
             ((TextView) mealView.findViewById(R.id.mealTotalKcal)).setText(
                     String.format("Kcal Total: %.2f", meal.getTotalKcal()));
+
             ((TextView) mealView.findViewById(R.id.mealTotalMoisture)).setText(
                     String.format("Moisture Total: %.2f", meal.getTotalMoisture()));
+
             ((TextView) mealView.findViewById(R.id.mealTotalProtein)).setText(
                     String.format("Protein Total: %.2f", meal.getTotalProtein()));
+
             ((TextView) mealView.findViewById(R.id.mealTotalFats)).setText(
                     String.format("Fats Total: %.2f", meal.getTotalFats()));
 

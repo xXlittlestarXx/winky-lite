@@ -37,20 +37,27 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     public synchronized void initialize() throws DatabaseException {
+        Log.d(TAG, "Attempting to initialize database...");
         if (initialized) {
+            Log.d(TAG, "Database already initialized");
             return;
         }
 
         try {
+            Log.d(TAG, "Checking if database exists...");
             boolean dbExists = checkDatabaseExists();
             if (!dbExists) {
+                Log.d(TAG, "Database doesn't exist, creating...");
                 createDatabaseDirectory();
                 copyDatabaseFromAssets();
             }
+            Log.d(TAG, "Opening database...");
             openDatabase();
             initialized = true;
+            Log.d(TAG, "Database initialized successfully");
         } catch (IOException | SQLException e) {
             Log.e(TAG, "Database initialization failed", e);
+            initialized = false;
             throw new DatabaseException("Failed to initialize database", e);
         }
     }
@@ -226,6 +233,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public long insertMeal(Meals meal) throws DatabaseException {
         checkInitialized();
+        if (database == null || !database.isOpen()) {
+            throw new DatabaseException("Database connection is not open");
+        }
 
         ContentValues values = new ContentValues();
         values.put("petID", meal.getPetID());
@@ -284,12 +294,48 @@ public class DBHandler extends SQLiteOpenHelper {
                     String date = cursor.getString(cursor.getColumnIndexOrThrow("wDate"));
                     String time = cursor.getString(cursor.getColumnIndexOrThrow("wTime"));
                     String descr =  cursor.getString(cursor.getColumnIndexOrThrow("wDescription"));
-                    double avgKcal = cursor.getDouble(cursor.getColumnIndexOrThrow("totalKcal"));
-                    double avgFat = cursor.getDouble(cursor.getColumnIndexOrThrow("totalFats"));
-                    double avgProtein = cursor.getDouble(cursor.getColumnIndexOrThrow("totalProtein"));
-                    double avgMoisture = cursor.getDouble(cursor.getColumnIndexOrThrow("totalMoisture"));
 
-                    Meals meal = new Meals(mealId, petId, date, time, descr, avgKcal, avgFat, avgProtein, avgMoisture);
+                    List<mealItem> items = new ArrayList<>();
+                    Cursor itemCursor = database.rawQuery("SELECT * FROM MealItems WHERE mealID = ?",
+                            new String[]{String.valueOf(mealId)});
+
+                    double totalKcal = 0, totalFats = 0, totalProtein = 0, totalMoisture = 0;
+                    if (itemCursor != null && itemCursor.moveToFirst()) {
+                        do {
+                            String type = itemCursor.getString(itemCursor.getColumnIndexOrThrow("itemType"));
+                            double kcal = itemCursor.getDouble(itemCursor.getColumnIndexOrThrow("kcalCount"));
+                            double fat = itemCursor.getDouble(itemCursor.getColumnIndexOrThrow("fatsAmt"));
+                            double protein = itemCursor.getDouble(itemCursor.getColumnIndexOrThrow("proteinAmt"));
+                            double moisture = itemCursor.getDouble(itemCursor.getColumnIndexOrThrow("moistureAmt"));
+
+                            totalKcal += kcal;
+                            totalFats += fat;
+                            totalProtein += protein;
+                            totalMoisture += moisture;
+
+                            mealItem item = new mealItem(type, kcal, fat, protein, moisture);
+                            items.add(item);
+                        } while (itemCursor.moveToNext());
+                    }
+
+                    if (itemCursor != null) itemCursor.close();
+
+                    int itemCount = items.size();
+                    double avgKcal = itemCount > 0 ? totalKcal / itemCount : 0;
+                    double avgFat = itemCount > 0 ? totalFats / itemCount : 0;
+                    double avgProtein = itemCount > 0 ? totalProtein / itemCount : 0;
+                    double avgMoisture = itemCount > 0 ? totalMoisture / itemCount : 0;
+
+                    Meals meal = new Meals(mealId, petId, date, time, descr, items);
+                    meal.setTotalKcal(totalKcal);
+                    meal.setTotalFats(totalFats);
+                    meal.setTotalProtein(totalProtein);
+                    meal.setTotalMoisture(totalMoisture);
+                    meal.setAvgKcal(avgKcal);
+                    meal.setAvgFat(avgFat);
+                    meal.setAvgProtein(avgProtein);
+                    meal.setAvgMoisture(avgMoisture);
+
                     mealsList.add(meal);
                 } while (cursor.moveToNext());
             }

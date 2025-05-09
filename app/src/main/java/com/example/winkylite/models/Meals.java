@@ -18,23 +18,31 @@ public class Meals {
     private double avgKcal, avgFat, avgProtein, avgMoisture;
 
     // Constructor for creating new Meals with item list (used when adding a meal)
-    public Meals(int petID, String date, String time, String description, List<mealItem> mealItems) {
+    public Meals(int mealID, int petID, String date, String time, String description, List<mealItem> mealItems) {
+        this.mealID = mealID;
         this.petID = petID;
         this.date = date;
         this.time = time;
         this.description = description;
         this.mealItems = mealItems;
 
-        double[] totals = mealCalculator.calculateMeal(mealItems);
-        this.totalKcal = totals[0];
-        this.totalMoisture = totals[1];
-        this.totalFats = totals[2];
-        this.totalProtein = totals[3];
+        this.totalKcal = 0;
+        this.totalMoisture = 0;
+        this.totalFats = 0;
+        this.totalProtein = 0;
 
-        this.avgKcal = totalKcal / mealItems.size();
-        this.avgFat = totalFats / mealItems.size();
-        this.avgProtein = totalProtein / mealItems.size();
-        this.avgMoisture = totalMoisture / mealItems.size();
+        for (mealItem item : mealItems) {
+            this.totalKcal += item.getKcal();
+            this.totalMoisture += item.getMoisture();
+            this.totalFats += item.getFats();
+            this.totalProtein += item.getProtein();
+        }
+
+        int itemCount = mealItems.size();
+        this.avgKcal = itemCount > 0 ? totalKcal / itemCount : 0;
+        this.avgFat = itemCount > 0 ? totalFats / itemCount : 0;
+        this.avgProtein = itemCount > 0 ? totalProtein / itemCount : 0;
+        this.avgMoisture = itemCount > 0 ? totalMoisture / itemCount : 0;
     }
 
     // Constructor for loading meals from database
@@ -54,6 +62,7 @@ public class Meals {
     // Save meal and its items to DB
     public boolean saveToDB(Context context) throws DBHandler.DatabaseException {
         DBHandler dbHelper = new DBHandler(context);
+        dbHelper.initialize();
         long insertedMealID = dbHelper.insertMeal(this);
 
         if (insertedMealID == -1) {
@@ -73,6 +82,22 @@ public class Meals {
         return true;
     }
 
+    //Setters
+    public void setMealID(int mealID) {this.mealID = mealID;}
+    public void setPetID(int petID) {this.petID = petID;}
+    public void setDate(String date) {this.date = date;}
+    public void setTime(String time) {this.time = time;}
+    public void setDescription(String description) {this.description = description;}
+    //public void setMealItems(List<mealItem> mealItems) {this.mealItems = mealItems;}
+    public void setTotalKcal(double totalKcal) {this.totalKcal = totalKcal;}
+    public void setTotalProtein(double totalProtein) {this.totalProtein = totalProtein;}
+    public void setTotalFats(double totalFats) {this.totalFats = totalFats;}
+    public void setTotalMoisture(double totalMoisture) {this.totalMoisture = totalMoisture;}
+    public void setAvgKcal(double avgKcal) {this.avgKcal = avgKcal;}
+    public void setAvgFat(double avgFat) {this.avgFat = avgFat;}
+    public void setAvgProtein(double avgProtein) {this.avgProtein = avgProtein;}
+    public void setAvgMoisture(double avgMoisture) {this.avgMoisture = avgMoisture;}
+
     // Getters
     public int getMealID() { return mealID; }
     public int getPetID() { return petID; }
@@ -86,8 +111,27 @@ public class Meals {
     public double getTotalFats() { return totalFats; }
     public double getTotalMoisture() { return totalMoisture; }
 
-    public double getAvgKcal() { return avgKcal; }
-    public double getAvgFat() { return avgFat; }
-    public double getAvgProtein() { return avgProtein; }
-    public double getAvgMoisture() { return avgMoisture; }
+    public void setMealItems(List<mealItem> mealItems) {
+        recalculateTotals();
+    }
+
+    private void recalculateTotals() {
+        totalKcal = 0;
+        totalMoisture = 0;
+        totalFats = 0;
+        totalProtein = 0;
+
+        for (mealItem item : mealItems) {
+            totalKcal += item.getKcal();
+            totalMoisture += item.getMoisture();
+            totalFats += item.getFats();
+            totalProtein += item.getProtein();
+        }
+
+        int count = mealItems.size();
+        avgKcal = count > 0 ? totalKcal / count : 0;
+        avgFat = count > 0 ? totalFats / count : 0;
+        avgProtein = count > 0 ? totalProtein / count : 0;
+        avgMoisture = count > 0 ? totalMoisture / count : 0;
+    }
 }
