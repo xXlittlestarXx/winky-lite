@@ -13,13 +13,12 @@ import java.io.IOException;
 public class TestInsert extends AppCompatActivity {
 
     private static final String TAG = "TestInsert";
-    private DBHandler dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dbHelper = new DBHandler(this);
+        DBHandler dbHelper = new DBHandler(this);
 
         dbHelper.createDatabaseDirectory();
         dbHelper.openDatabase();

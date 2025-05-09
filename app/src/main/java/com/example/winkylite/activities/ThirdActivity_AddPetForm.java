@@ -20,9 +20,11 @@ import com.example.winkylite.models.Pets;
 public class ThirdActivity_AddPetForm extends AppCompatActivity {
     /* VARIABLES FROM activity_third*/
 
-    private Button backButton, submitButton;
-    private RadioButton ageMonths, ageYears, typeCat, typeDog,
-            genderMale, genderFemale, fixedYes, fixedNo;
+    private RadioButton ageMonths;
+private RadioButton typeDog;
+private RadioButton genderMale;
+ private RadioButton fixedYes;
+
 
     private EditText petName, petAge, petCWeight, petGWeight;
     private CheckBox setGoalWeight;
@@ -40,17 +42,17 @@ public class ThirdActivity_AddPetForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_third);
 
-        backButton = findViewById(R.id.backButton);
-        submitButton = findViewById(R.id.submitButton);
+        Button backButton = findViewById(R.id.backButton);
+        Button submitButton = findViewById(R.id.submitButton);
 
         ageMonths = findViewById(R.id.months);
-        ageYears = findViewById(R.id.years);
-        typeCat = findViewById(R.id.cat);
+        RadioButton ageYears = findViewById(R.id.years);
+        RadioButton typeCat = findViewById(R.id.cat);
         typeDog = findViewById(R.id.dog);
         genderMale = findViewById(R.id.male);
-        genderFemale = findViewById(R.id.female);
+        RadioButton genderFemale = findViewById(R.id.female);
         fixedYes = findViewById(R.id.fixed);
-        fixedNo = findViewById(R.id.notFixed);
+        RadioButton fixedNo = findViewById(R.id.notFixed);
 
         petName = findViewById(R.id.petName);
         petAge = findViewById(R.id.petAge);

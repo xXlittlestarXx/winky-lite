@@ -32,7 +32,6 @@ public class FifthActivity_AddMeal extends AppCompatActivity{
 
     private LinearLayout itemContainer;
     private EditText etDate, etTime, etDescription;
-    private Button btnBack, btnSave, btnAddItem;
     private LayoutInflater inflater;
     private int itemCount = 0;
     private final int MAX_ITEMS = 5;
@@ -64,9 +63,9 @@ public class FifthActivity_AddMeal extends AppCompatActivity{
         etTime = findViewById(R.id.etTime);
         etDescription = findViewById(R.id.etDescription);
 
-        btnBack = findViewById(R.id.btnBack);
-        btnSave = findViewById(R.id.btnSave);
-        btnAddItem = findViewById(R.id.btnAddItem);
+        Button btnBack = findViewById(R.id.btnBack);
+        Button btnSave = findViewById(R.id.btnSave);
+        Button btnAddItem = findViewById(R.id.btnAddItem);
 
         inflater = LayoutInflater.from(this);
 
@@ -97,7 +96,6 @@ public class FifthActivity_AddMeal extends AppCompatActivity{
             }
 
             List<mealItem> mealItems = new ArrayList<>();
-            List<String> foodTypes = new ArrayList<>();
 
             for (int i = 0; i < itemContainer.getChildCount(); i++) {
                 View itemView = itemContainer.getChildAt(i);
@@ -116,7 +114,7 @@ public class FifthActivity_AddMeal extends AppCompatActivity{
                 mealItems.add(new mealItem(type, kcal, moisture, fats, protein));
             }
 
-            double[] averages = mealCalculator.calculateMeal(mealItems);
+            mealCalculator.calculateMeal(mealItems);
 
             Meals meal = new Meals(
                     currentMealId,

@@ -1,8 +1,11 @@
 package com.example.winkylite.models;
 
     public class mealItem {
-        private String type;
-        private double kcal, moisture, fats, protein;
+        private final String type;
+        private final double kcal;
+        private final double moisture;
+        private final double fats;
+        private final double protein;
 
         public mealItem(String type, double kcal, double moisture, double fats, double protein) {
             this.type = type;

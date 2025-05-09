@@ -11,18 +11,15 @@ import android.widget.Button;
 import com.example.winkylite.database.DBHandler;
 import com.example.winkylite.R;
 
-import java.io.IOException;
-
 public class MainActivity_LandingPage extends AppCompatActivity {
     private DBHandler dbHelper;
-    private Button continueButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        continueButton = findViewById(R.id.button);
+        Button continueButton = findViewById(R.id.button);
         continueButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity_LandingPage.this, SecondActivity_HomePage.class);
             startActivity(intent);
@@ -41,6 +38,7 @@ public class MainActivity_LandingPage extends AppCompatActivity {
         }
     }
 
+
     private void insertTestUser() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -49,6 +47,7 @@ public class MainActivity_LandingPage extends AppCompatActivity {
         values.put("wPassword", "testingpw");
         values.put("wTheme", 1);
 
-        db.insertWithOnConflict("Users", null, values, SQLiteDatabase.CONFLICT_IGNORE);
+       db.insertWithOnConflict("Users", null, values, SQLiteDatabase.CONFLICT_IGNORE);
     }
+
 }

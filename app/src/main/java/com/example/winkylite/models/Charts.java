@@ -8,21 +8,23 @@ import java.util.List;
 import java.util.Map;
 
 public class Charts {
-    private String nutrientName;
-    private List<DataPoint> dataPoints;
-    private float recommendationValue;
+    private final String nutrientName;
+    private final List<DataPoint> dataPoints;
+    private final float recommendationValue;
+
 
     public Charts(String nutrientName, Map<String, chartCalculator.DailyAverage> dailyAverages, float recommendation) {
         this.nutrientName = nutrientName;
         this.recommendationValue = recommendation;
-        this.dataPoints = new ArrayList<>();
+       this.dataPoints = new ArrayList<>();
 
         int index = 0;
-        for (Map.Entry<String, chartCalculator.DailyAverage> entry : dailyAverages.entrySet()) {
-            float value = (float) getNutrientValue(entry.getValue());
+       for (Map.Entry<String, chartCalculator.DailyAverage> entry : dailyAverages.entrySet()) {
+           float value = (float) getNutrientValue(entry.getValue());
             this.dataPoints.add(new DataPoint(index++, value));
-        }
+       }
     }
+
 
     private double getNutrientValue(chartCalculator.DailyAverage daily) {
         switch(nutrientName) {

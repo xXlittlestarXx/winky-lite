@@ -13,7 +13,6 @@ import com.example.winkylite.database.DBHandler;
 import com.example.winkylite.R;
 
 public class SecondActivity_HomePage extends AppCompatActivity {
-    private Button addPetButton;
     private DBHandler dbHandler;
 
     @Override
@@ -25,7 +24,7 @@ public class SecondActivity_HomePage extends AppCompatActivity {
             dbHandler = new DBHandler(this);
             dbHandler.initialize();
 
-            addPetButton = findViewById(R.id.AddPetButton);
+            Button addPetButton = findViewById(R.id.AddPetButton);
             addPetButton.setOnClickListener(v-> {
                 Intent intent = new Intent(SecondActivity_HomePage.this, ThirdActivity_AddPetForm.class);
                 startActivity(intent);

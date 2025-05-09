@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.winkylite.models.Meals;
 import com.example.winkylite.models.Pets;
 import com.example.winkylite.models.mealItem;
@@ -237,6 +239,18 @@ public class DBHandler extends SQLiteOpenHelper {
             throw new DatabaseException("Database connection is not open");
         }
 
+        ContentValues values = getContentValues(meal);
+
+        try {
+            return database.insert("Meals", null, values);
+        } catch (SQLException e) {
+            Log.e(TAG, "Failed to insert meal", e);
+            throw new DatabaseException("Failed to insert meal", e);
+        }
+    }
+
+    @NonNull
+    private static ContentValues getContentValues(Meals meal) {
         ContentValues values = new ContentValues();
         values.put("petID", meal.getPetID());
         values.put("wDate", meal.getDate());
@@ -247,13 +261,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put("totalProtein", meal.getTotalProtein());
         values.put("totalFats", meal.getTotalFats());
         values.put("wPetFixed", "bug");
-
-        try {
-            return database.insert("Meals", null, values);
-        } catch (SQLException e) {
-            Log.e(TAG, "Failed to insert meal", e);
-            throw new DatabaseException("Failed to insert meal", e);
-        }
+        return values;
     }
 
     public boolean insertMealItem(int mealId, mealItem item) throws DatabaseException {
@@ -361,36 +369,6 @@ public class DBHandler extends SQLiteOpenHelper {
             throw new DatabaseException("Failed to get meal items", e);
         }
     }
-
-    /*public double[] getPetRecommendations(int petId) throws DatabaseException {
-        checkInitialized();
-
-        double[] recommendations = new double[4];
-        Cursor cursor = null;
-
-        try {
-            cursor = database.rawQuery(
-                    "SELECT wPetKcalGoal, wPetProteinGoal, wPetFatsGoal, wPetMoistureGoal " +
-                            "FROM Pets WHERE wPetID = ?",
-                    new String[]{String.valueOf(petId)}
-            );
-
-            if (cursor != null && cursor.moveToFirst()) {
-                recommendations[0] = cursor.getDouble(0);
-                recommendations[1] = cursor.getDouble(1);
-                recommendations[2] = cursor.getDouble(2);
-                recommendations[3] = cursor.getDouble(3);
-            }
-            return recommendations;
-        } catch (SQLException e) {
-            Log.e(TAG, "Failed to get pet recommendations", e);
-            throw new DatabaseException("Failed to get pet recommendations", e);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    } */
 
     public Pets getPetDetails(int petId) throws DatabaseException {
         checkInitialized();

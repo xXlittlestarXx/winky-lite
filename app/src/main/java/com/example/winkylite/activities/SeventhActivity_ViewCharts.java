@@ -1,8 +1,10 @@
 package com.example.winkylite.activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -11,6 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.winkylite.R;
 import com.example.winkylite.calculators.chartCalculator;
 import com.example.winkylite.calculators.chartCalculator.DailyAverage;
@@ -18,6 +24,7 @@ import com.example.winkylite.database.DBHandler;
 import com.example.winkylite.models.Meals;
 import com.example.winkylite.models.Pets;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +82,8 @@ public class SeventhActivity_ViewCharts extends AppCompatActivity {
             loadCharts();
         } catch (DBHandler.DatabaseException e) {
             Log.e("SeventhActivity", "Error loading charts: " + e.getMessage());
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
 
         Button backButton = findViewById(R.id.backButton);
@@ -86,7 +95,7 @@ public class SeventhActivity_ViewCharts extends AppCompatActivity {
         });
     }
 
-    private void loadCharts() throws DBHandler.DatabaseException {
+    private void loadCharts() throws DBHandler.DatabaseException, UnsupportedEncodingException {
         List<Meals> meals = dbHandler.getMealsForPet(currentPetId);
         Pets pet = dbHandler.getPetDetails(currentPetId);
 
@@ -98,26 +107,38 @@ public class SeventhActivity_ViewCharts extends AppCompatActivity {
         Map<String, DailyAverage> averages = chartCalculator.calculateDailyAverages(meals);
 
         List<Double> kcalValues = getOrderedValues(averages, "kcal");
+
         String kcalChartURL = chartCalculator.generateChartURL(kcalValues, pet.getRecKcal(), "Daily Calories");
+        Log.d("ChartURL", "Kcal URL: " + kcalChartURL);
         loadChartImage(kcalChartURL, kcalChart);
+
         double latestKcal = kcalValues.get(kcalValues.size() - 1);
         kcalStatus.setText(chartCalculator.compareWithRecommendation(latestKcal, pet.getRecKcal()));
 
         List<Double> proteinValues = getOrderedValues(averages, "protein");
+
         String proteinChartURL = chartCalculator.generateChartURL(proteinValues, pet.getRecProtein(), "Daily Protein");
+        Log.d("ChartURL", "Protein URL: " + proteinChartURL);
         loadChartImage(proteinChartURL, proteinChart);
+
         double latestProtein = proteinValues.get(proteinValues.size() - 1);
         proteinStatus.setText(chartCalculator.compareWithRecommendation(latestProtein, pet.getRecProtein()));
 
         List<Double> fatValues = getOrderedValues(averages, "fats");
+
         String fatChartURL = chartCalculator.generateChartURL(fatValues, pet.getRecFats(), "Daily Fats");
+        Log.d("ChartURL", "Fat URL: " + fatChartURL);
         loadChartImage(fatChartURL, fatChart);
+
         double latestFat = fatValues.get(fatValues.size() - 1);
         fatStatus.setText(chartCalculator.compareWithRecommendation(latestFat, pet.getRecFats()));
 
         List<Double> moistureValues = getOrderedValues(averages, "moisture");
+
         String moistureChartURL = chartCalculator.generateChartURL(moistureValues, pet.getRecMoisture(), "Daily Moisture");
+        Log.d("ChartURL", "Moisture URL: " + moistureChartURL);
         loadChartImage(moistureChartURL, moistureChart);
+
         double latestMoisture = moistureValues.get(moistureValues.size() - 1);
         moistureStatus.setText(chartCalculator.compareWithRecommendation(latestMoisture, pet.getRecMoisture()));
     }
@@ -144,6 +165,27 @@ public class SeventhActivity_ViewCharts extends AppCompatActivity {
     }
 
     private void loadChartImage(String url, ImageView imageView) {
-        Glide.with(this).load(url).into(imageView);
+        Glide.with(this)
+                .load(url)
+                .placeholder(R.drawable.chart_placeholder)
+                .error(R.drawable.chart_error)
+
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model,
+                                                Target<Drawable> target, boolean isFirstResource) {
+                        Log.e("Glide", "Load failed: " + (e != null ? e.getMessage() : "Unknown error"));
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model,
+                                                   Target<Drawable> target, DataSource dataSource,
+                                                   boolean isFirstResource) {
+                        return false;
+                    }
+                })
+                .into(imageView);
+
     }
 }

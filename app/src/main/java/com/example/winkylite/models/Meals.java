@@ -12,10 +12,10 @@ public class Meals {
     private int mealID;
     private int petID;
     private String date, time, description;
-    private List<mealItem> mealItems;
+    private final List<mealItem> mealItems;
 
     private double totalKcal, totalProtein, totalFats, totalMoisture;
-    private double avgKcal, avgFat, avgProtein, avgMoisture;
+    private double avgKcal,avgFat, avgProtein, avgMoisture;
 
     // Constructor for creating new Meals with item list (used when adding a meal)
     public Meals(int mealID, int petID, String date, String time, String description, List<mealItem> mealItems) {
@@ -40,19 +40,21 @@ public class Meals {
 
         int itemCount = mealItems.size();
         this.avgKcal = itemCount > 0 ? totalKcal / itemCount : 0;
-        this.avgFat = itemCount > 0 ? totalFats / itemCount : 0;
+
+       this.avgFat = itemCount > 0 ? totalFats / itemCount : 0;
         this.avgProtein = itemCount > 0 ? totalProtein / itemCount : 0;
-        this.avgMoisture = itemCount > 0 ? totalMoisture / itemCount : 0;
-    }
+     this.avgMoisture = itemCount > 0 ? totalMoisture / itemCount : 0;
+   }
 
     // Constructor for loading meals from database
-    public Meals(int mealID, int petID, String date, String time, String description, double avgKcal, double avgFat, double avgProtein, double avgMoisture) {
+   public Meals(int mealID, int petID, String date, String time, String description, double avgKcal, double avgFat, double avgProtein, double avgMoisture) {
         this.mealID = mealID;
         this.petID = petID;
         this.date = date;
-        this.time = time;
-        this.description = description;
+       this.time = time;
+       this.description = description;
         this.avgKcal = avgKcal;
+
         this.avgFat = avgFat;
         this.avgProtein = avgProtein;
         this.avgMoisture = avgMoisture;
@@ -66,14 +68,21 @@ public class Meals {
         long insertedMealID = dbHelper.insertMeal(this);
 
         if (insertedMealID == -1) {
-            dbHelper.close();
-            return false;
-        }
 
-        for (mealItem item : mealItems) {
-            boolean itemInserted = dbHelper.insertMealItem((int) insertedMealID, item);
-            if (!itemInserted) {
+            dbHelper.close();
+
+            return false;
+       }
+
+
+       for (mealItem item : mealItems) {
+
+           boolean itemInserted = dbHelper.insertMealItem((int) insertedMealID, item);
+
+           if (!itemInserted) {
+
                 dbHelper.close();
+
                 return false;
             }
         }
@@ -95,8 +104,10 @@ public class Meals {
     public void setTotalMoisture(double totalMoisture) {this.totalMoisture = totalMoisture;}
     public void setAvgKcal(double avgKcal) {this.avgKcal = avgKcal;}
     public void setAvgFat(double avgFat) {this.avgFat = avgFat;}
-    public void setAvgProtein(double avgProtein) {this.avgProtein = avgProtein;}
+
+  public void setAvgProtein(double avgProtein) {this.avgProtein = avgProtein;}
     public void setAvgMoisture(double avgMoisture) {this.avgMoisture = avgMoisture;}
+
 
     // Getters
     public int getMealID() { return mealID; }

@@ -7,7 +7,7 @@ import com.example.winkylite.database.DBHandler;
 
 public class Pets {
     /* VARIABLES */
-    private String petName, ageUnit, petGender, petType, petActivity;
+    private String petName, ageUnit, petGender, petType; // --Commented out by Inspection (5/8/2025 8:57 PM):petActivity;
     private boolean isFixed, hasGoalWeight;
     private int petAge, activityLevel;
     private double petCurrentWeight, petGoalWeight;
@@ -46,16 +46,36 @@ public class Pets {
     public double getRecKcal() {return recKcal;}
     public double getRecFats() {return recFats;}
     public double getRecMoisture() {return recMoisture;}
-    public String setPetName(String s) {return this.petName = s;}
-    public String setPetAgeUnit(String s) { return this.ageUnit = s;}
-    public String setPetGender(String s) {return this.petGender = s;}
-    public String setPetType(String s){ return this.petType = s;}
-    public boolean setIsFixed(boolean bool) {return this.isFixed = bool;}
-    public boolean setHasGoalWeight(boolean bool) {return this.hasGoalWeight = bool;}
-    public int setPetAge(int num) { return this.petAge = num;}
-    public int setActivityLvl(int num){ return this.activityLevel = num;}
-    public double setCurrentWeight(double val){return this.petCurrentWeight = val;}
-    public double setGoalWeight(double val) {return this.petGoalWeight = val;}
+    public void setPetName(String s) {
+        this.petName = s;
+    }
+    public void setPetAgeUnit(String s) {
+        this.ageUnit = s;
+    }
+    public void setPetGender(String s) {
+        this.petGender = s;
+    }
+    public void setPetType(String s){
+        this.petType = s;
+    }
+    public void setIsFixed(boolean bool) {
+        this.isFixed = bool;
+    }
+    public void setHasGoalWeight(boolean bool) {
+        this.hasGoalWeight = bool;
+    }
+    public void setPetAge(int num) {
+        this.petAge = num;
+    }
+    public void setActivityLvl(int num){
+        this.activityLevel = num;
+    }
+    public void setCurrentWeight(double val){
+        this.petCurrentWeight = val;
+    }
+    public void setGoalWeight(double val) {
+        this.petGoalWeight = val;
+    }
     public void setRecProtein(double val) {this.recProtein = val;}
     public void setRecKcal(double val) {this.recKcal = val;}
     public void setRecFats(double val) {this.recFats = val;}

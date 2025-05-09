@@ -8,8 +8,8 @@ public class RecCalculator {
     public void performCalculations(double weight, int activityLevel,
                                     String petType, boolean isFixed, int petAge,
                                     boolean isPuppyOrKitten, String ageUnit) {
-        recKcal = calcRecKcal(weight, activityLevel, petType, isFixed, petAge, isPuppyOrKitten);
-        recProtein = calcRecProtein(weight, petType, ageUnit, petAge, recKcal);
+        recKcal = calcRecKcal(weight, petType, isFixed, petAge, isPuppyOrKitten);
+        recProtein = calcRecProtein(petType, ageUnit, petAge, recKcal);
         recFat = calcRecFats(activityLevel, petType, isPuppyOrKitten);
     }
 
@@ -41,7 +41,7 @@ public class RecCalculator {
         return recFat;
     }
 
-    private double calcRecProtein(double weight, String petType, String ageUnit, int petAge,
+    private double calcRecProtein(String petType, String ageUnit, int petAge,
                                   double recKcal) {
         double gramsPer1000Kcal = 0;
 
@@ -70,8 +70,8 @@ public class RecCalculator {
         return 70 * Math.pow(weight, 0.75);
     }
 
-    private double calcRecKcal(double weight, int activityLevel, String petType, boolean isFixed,
-                              int petAge, boolean isPuppyOrKitten) {
+    private double calcRecKcal(double weight, String petType, boolean isFixed,
+                               int petAge, boolean isPuppyOrKitten) {
         double RER = calcRER(weight);
 
         if (petType.equals("Dog")) {

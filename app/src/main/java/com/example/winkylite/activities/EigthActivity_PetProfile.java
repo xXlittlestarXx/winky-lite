@@ -3,7 +3,6 @@ package com.example.winkylite.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -96,7 +95,7 @@ public class EigthActivity_PetProfile extends AppCompatActivity {
         //rounded
         String roundKcal =df.format(pet.getRecKcal());
         String roundProtein = df.format(pet.getRecProtein());
-        String roundFats = df.format(pet.getRecFats());
+        df.format(pet.getRecFats());
 
         petNameTextView.setText("Name: " + currentPetName);
         petAgeTextView.setText("Age: " + pet.getPetAge() + " " + pet.getAgeUnit());

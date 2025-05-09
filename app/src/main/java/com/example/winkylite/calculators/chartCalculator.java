@@ -1,7 +1,13 @@
 package com.example.winkylite.calculators;
 
+import android.net.Uri;
+import android.util.Log;
+
 import com.example.winkylite.models.Meals;
-import java.util.ArrayList;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,33 +63,34 @@ public class chartCalculator {
         }
     }
 
-    public static String generateChartURL(List<Double> values, double recommendation, String label) {
-        String baseURL = "https://image-charts.com/chart?";
-
-        String chs = "600x200";
-        String cht = "lc";
-        String chd = "t:" + getFormattedValues(values);
-        String chco = "4A89DC";
-        String chdl = label;
-        String chxt = "x,y";
-        String chxl = "0:|" + getDayLabels(values.size());
-        String chm = getRecommendationMarker(recommendation);
-
-        return baseURL + "chs=" + chs +
-                "&cht=" + cht +
-                "&chd=" + chd +
-                "&chco=" + chco +
-                "&chdl=" + chdl +
-                "&chxt=" + chxt +
-                "&chxl=" + chxl +
-                "&chm=" + chm;
+    public static String generateChartURL(List<Double> values, double recommendation, String label) throws UnsupportedEncodingException {
+        try {
+            String formattedValues = getFormattedValues(values);
+            return new Uri.Builder()
+                    .scheme("https")
+                    .authority("image-charts.com")
+                    .path("chart")
+                    .appendQueryParameter("chs", "600x200")
+                    .appendQueryParameter("cht", "lc")
+                    .appendQueryParameter("chd", "a:" + formattedValues)
+                    .appendQueryParameter("chco", "4A89DC")
+                    .appendQueryParameter("chdl", label)
+                    .appendQueryParameter("chxt", "x,y")
+                    .appendQueryParameter("chxl", "0:|" + getDayLabels(values.size()))
+                    .appendQueryParameter("chm", getRecommendationMarker(recommendation))
+                    .build()
+                    .toString();
+        } catch (Exception e) {
+            Log.e("ChartURL", "Error generating chart URL", e);
+            return null;
+        }
     }
     private static String getFormattedValues(List<Double> values) {
         StringBuilder sb = new StringBuilder();
         for (Double value : values) {
-            sb.append(String.format("%.1f", value)).append(",");
+            sb.append(String.format("%.0f", value)).append(",");
         }
-        return sb.toString().replaceAll(",$", "");
+        return sb.length() > 0 ? sb.substring(0, sb.length() - 1) : "";
     }
 
     private static String getDayLabels(int days) {
