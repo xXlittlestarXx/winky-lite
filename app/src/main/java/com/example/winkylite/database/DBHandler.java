@@ -8,8 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import com.example.winkylite.models.Meals;
 import com.example.winkylite.models.Pets;
 import com.example.winkylite.models.mealItem;
@@ -239,18 +237,6 @@ public class DBHandler extends SQLiteOpenHelper {
             throw new DatabaseException("Database connection is not open");
         }
 
-        ContentValues values = getContentValues(meal);
-
-        try {
-            return database.insert("Meals", null, values);
-        } catch (SQLException e) {
-            Log.e(TAG, "Failed to insert meal", e);
-            throw new DatabaseException("Failed to insert meal", e);
-        }
-    }
-
-    @NonNull
-    private static ContentValues getContentValues(Meals meal) {
         ContentValues values = new ContentValues();
         values.put("petID", meal.getPetID());
         values.put("wDate", meal.getDate());
@@ -261,7 +247,13 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put("totalProtein", meal.getTotalProtein());
         values.put("totalFats", meal.getTotalFats());
         values.put("wPetFixed", "bug");
-        return values;
+
+        try {
+            return database.insert("Meals", null, values);
+        } catch (SQLException e) {
+            Log.e(TAG, "Failed to insert meal", e);
+            throw new DatabaseException("Failed to insert meal", e);
+        }
     }
 
     public boolean insertMealItem(int mealId, mealItem item) throws DatabaseException {
