@@ -17,6 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Back"
+            android:textSize="20dp"
+            android:fontFamily="@font/bree_serif"
             android:layout_marginBottom="20dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -25,10 +27,10 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/agbalumo"
             android:text="Add New Pet"
-            android:textSize="24sp"
+            android:textSize="30sp"
             android:textColor="#1a36b4"
-            android:layout_marginTop="20dp"
             app:layout_constraintTop_toBottomOf="@+id/backButton"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -37,7 +39,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pet Name:"
-            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/bree_serif"
+            android:textSize="20dp"
             android:layout_marginTop="20dp"
             app:layout_constraintTop_toBottomOf="@+id/title"
             app:layout_constraintStart_toStartOf="parent" />
@@ -46,7 +50,9 @@
             android:id="@+id/petName"
             android:layout_width="200dp"
             android:layout_height="48dp"
+            android:fontFamily="@font/bree_serif"
             android:hint="Name"
+            android:textColor="@color/black"
             android:layout_marginBottom="20dp"
             app:layout_constraintTop_toBottomOf="@+id/petNameLabel"
             app:layout_constraintStart_toStartOf="parent" />
@@ -55,8 +61,10 @@
             android:id="@+id/ageLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/bree_serif"
             android:text="Age:"
-            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textSize="20dp"
             app:layout_constraintTop_toBottomOf="@+id/petName"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -64,7 +72,9 @@
             android:id="@+id/petAge"
             android:layout_width="100dp"
             android:layout_height="48dp"
+            android:fontFamily="@font/bree_serif"
             android:hint="Age"
+            android:textColor="@color/black"
             android:inputType="number"
             android:layout_marginBottom="10dp"
             app:layout_constraintTop_toBottomOf="@+id/ageLabel"
@@ -83,21 +93,29 @@
                 android:id="@+id/months"
                 android:layout_width="120dp"
                 android:layout_height="48dp"
-                android:text="Months" />
+                android:text="Months"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:fontFamily="@font/bree_serif"/>
 
             <RadioButton
                 android:id="@+id/years"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:text="Years" />
+                android:text="Years"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:fontFamily="@font/bree_serif"/>
         </RadioGroup>
 
         <TextView
             android:id="@+id/typeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/bree_serif"
             android:text="Type:"
-            android:textSize="18sp"
+            android:textSize="20dp"
+            android:textColor="@color/black"
             android:layout_marginBottom="10dp"
             app:layout_constraintTop_toBottomOf="@+id/ageUnitGroup"
             app:layout_constraintStart_toStartOf="parent" />
@@ -115,13 +133,19 @@
                 android:id="@+id/cat"
                 android:layout_width="120dp"
                 android:layout_height="48dp"
-                android:text="Cat" />
+                android:text="Cat"
+                android:textSize="18dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/bree_serif"/>
 
             <RadioButton
                 android:id="@+id/dog"
                 android:layout_width="120dp"
                 android:layout_height="48dp"
-                android:text="Dog" />
+                android:text="Dog"
+                android:textSize="18dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/bree_serif"/>
         </RadioGroup>
 
         <TextView
@@ -129,7 +153,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Gender:"
-            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/bree_serif"
+            android:textSize="20dp"
             android:layout_marginBottom="10dp"
             app:layout_constraintTop_toBottomOf="@+id/typeButtons"
             app:layout_constraintStart_toStartOf="parent" />
@@ -147,13 +173,19 @@
                 android:id="@+id/male"
                 android:layout_width="120dp"
                 android:layout_height="48dp"
-                android:text="Male" />
+                android:text="Male"
+                android:textSize="18dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/bree_serif"/>
 
             <RadioButton
                 android:id="@+id/female"
                 android:layout_width="120dp"
                 android:layout_height="48dp"
-                android:text="Female" />
+                android:text="Female"
+                android:textSize="18dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/bree_serif"/>
         </RadioGroup>
 
         <TextView
@@ -161,7 +193,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Fixed:"
-            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/bree_serif"
+            android:textSize="20sp"
             android:layout_marginBottom="10dp"
             app:layout_constraintTop_toBottomOf="@+id/genderButtons"
             app:layout_constraintStart_toStartOf="parent" />
@@ -178,13 +212,19 @@
                 android:id="@+id/fixed"
                 android:layout_width="120dp"
                 android:layout_height="48dp"
-                android:text="Yes" />
+                android:text="Yes"
+                android:textSize="18dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/bree_serif"/>
 
             <RadioButton
                 android:id="@+id/notFixed"
                 android:layout_width="120dp"
                 android:layout_height="48dp"
-                android:text="No" />
+                android:text="No"
+                android:textSize="18dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/bree_serif"/>
         </RadioGroup>
 
         <SeekBar
@@ -204,7 +244,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="Activity Level:"
-            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/bree_serif"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fixedButtons" />
 
@@ -214,6 +256,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Low"
+            android:textColor="@color/black"
+            android:fontFamily="@font/bree_serif"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="@id/activitySlider"
             app:layout_constraintTop_toBottomOf="@+id/activityLevel" />
@@ -224,6 +268,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="High"
+            android:textColor="@color/black"
+            android:fontFamily="@font/bree_serif"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@id/activitySlider"
             app:layout_constraintTop_toBottomOf="@+id/activityLevel" />
@@ -233,7 +279,9 @@
             android:layout_width="150dp"
             android:layout_height="48dp"
             android:layout_marginTop="4dp"
+            android:textColor="@color/black"
             android:hint="4.2"
+            android:fontFamily="@font/bree_serif"
             android:inputType="numberDecimal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/weightLabel" />
@@ -244,6 +292,9 @@
             android:layout_height="48dp"
             android:layout_marginTop="4dp"
             android:text="Set Goal Weight"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:fontFamily="@font/bree_serif"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/currentWeight" />
 
@@ -254,8 +305,9 @@
             android:layout_marginTop="16dp"
             android:backgroundTint="#1a36b4"
             android:text="Submit"
+            android:fontFamily="@font/bree_serif"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
+            android:textSize="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/goalWeight" />
 
@@ -265,7 +317,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Current Weight (kg):"
-            android:textSize="18sp"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/bree_serif"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/activitySlider" />
 
@@ -275,6 +329,8 @@
             android:layout_height="48dp"
             android:hint="Goal Weight"
             android:inputType="numberDecimal"
+            android:textColor="@color/black"
+            android:fontFamily="@font/bree_serif"
             android:visibility = "gone"
             app:layout_constraintTop_toBottomOf="@+id/goalWeightCheckbox"
             app:layout_constraintStart_toStartOf="parent" />

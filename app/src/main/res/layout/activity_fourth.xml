@@ -17,6 +17,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Back"
+            android:fontFamily="@font/bree_serif"
+            android:textColor="#000000"
+            android:textSize="20dp"
             android:layout_marginBottom="20dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -26,7 +29,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pet Name Here"
-            android:textSize="24sp"
+            android:fontFamily="@font/agbalumo"
+            android:textSize="30dp"
             android:textColor="#1a36b4"
             android:layout_marginTop="20dp"
             app:layout_constraintTop_toBottomOf="@+id/backButton"
@@ -48,19 +52,21 @@
             android:text="Profile"
             android:layout_marginBottom="16dp"
             android:backgroundTint="#1a36b4"
+            android:fontFamily="@font/bree_serif"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
+            android:textSize="20dp"
             app:layout_constraintTop_toBottomOf="@+id/title"/>
 
             <Button
                 android:id="@+id/addMealButton"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="AddMeal"
+                android:text="+ Add Meal"
                 android:layout_marginBottom="16dp"
                 android:backgroundTint="#1a36b4"
+                android:fontFamily="@font/bree_serif"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:textSize="20dp"
                 app:layout_constraintTop_toBottomOf="@+id/profileButton"/>
 
         <Button
@@ -70,8 +76,9 @@
             android:text="View Meals"
             android:layout_marginBottom="16dp"
             android:backgroundTint="#1a36b4"
+            android:fontFamily="@font/bree_serif"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
+            android:textSize="20dp"
             app:layout_constraintTop_toBottomOf="@+id/addMealButton"/>
 
             <Button
@@ -80,8 +87,9 @@
                 android:layout_height="60dp"
                 android:text="View Charts"
                 android:backgroundTint="#1a36b4"
+                android:fontFamily="@font/bree_serif"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:textSize="20dp"
                 app:layout_constraintTop_toBottomOf="@+id/viewMealsButton"/>
         </LinearLayout>
 
