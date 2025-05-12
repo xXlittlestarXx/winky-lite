@@ -36,6 +36,7 @@ public class FifthActivity_AddMeal extends AppCompatActivity{
     private int itemCount = 0;
     private final int MAX_ITEMS = 5;
     private int currentPetID, currentMealId;
+    private String currentPetName;
     private DBHandler dbHandler;
 
     @Override
@@ -55,6 +56,7 @@ public class FifthActivity_AddMeal extends AppCompatActivity{
         }
 
         currentPetID = getIntent().getIntExtra("SELECTED_PET_ID", -1);
+        currentPetName = getIntent().getStringExtra("SELECTED_PET_NAME");
         currentMealId = getIntent().getIntExtra("SELECTED_MEAL_ID", -1);
 
         itemContainer = findViewById(R.id.itemContainer);
@@ -71,6 +73,9 @@ public class FifthActivity_AddMeal extends AppCompatActivity{
 
         btnBack.setOnClickListener(v -> {
             Intent intent = new Intent(FifthActivity_AddMeal.this, FourthActivity_PetDetails.class);
+            intent.putExtra("SELECTED_PET_NAME", currentPetName);
+            intent.putExtra("SELECTED_PET_ID", currentPetID);
+            intent.putExtra("SELECTED_MEAL_ID", currentMealId);
             startActivity(intent);
         });
 
